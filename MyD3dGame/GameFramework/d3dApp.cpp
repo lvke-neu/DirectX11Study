@@ -21,7 +21,7 @@ MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 D3DApp::D3DApp(HINSTANCE hInstance)
 	: m_hAppInst(hInstance),
-	m_MainWndCaption(L"DirectX11 Initialization"),
+	m_MainWndCaption(L"MyD3dGame"),
 	m_ClientWidth(1280),
 	m_ClientHeight(720),
 	m_hMainWnd(nullptr),

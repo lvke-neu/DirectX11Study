@@ -21,17 +21,23 @@
   <ItemGroup>
     <ClCompile Include="GameFramework\d3dApp.cpp" />
     <ClCompile Include="GameFramework\d3dUtil.cpp" />
+    <ClCompile Include="GameFramework\DDSTextureLoader.cpp" />
     <ClCompile Include="GameFramework\DXTrace.cpp" />
     <ClCompile Include="GameFramework\GameApp.cpp" />
     <ClCompile Include="GameFramework\GameTimer.cpp" />
+    <ClCompile Include="GameFramework\Keyboard.cpp" />
     <ClCompile Include="GameFramework\Main.cpp" />
+    <ClCompile Include="GameFramework\Mouse.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameFramework\d3dApp.h" />
     <ClInclude Include="GameFramework\d3dUtil.h" />
+    <ClInclude Include="GameFramework\DDSTextureLoader.h" />
     <ClInclude Include="GameFramework\DXTrace.h" />
     <ClInclude Include="GameFramework\GameApp.h" />
     <ClInclude Include="GameFramework\GameTimer.h" />
+    <ClInclude Include="GameFramework\Keyboard.h" />
+    <ClInclude Include="GameFramework\Mouse.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
@@ -107,7 +113,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
-      <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>USE_IMGUI;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>../ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -122,7 +128,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>USE_IMGUI;WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>../ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -139,7 +145,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>USE_IMGUI;WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>../ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -158,7 +164,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
-      <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>USE_IMGUI;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>../ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>

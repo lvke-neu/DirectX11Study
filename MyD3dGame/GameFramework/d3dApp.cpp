@@ -3,6 +3,10 @@
 #include "DXTrace.h"
 #include <sstream>
 
+#if USE_IMGUI
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+#endif
+
 namespace
 {
 	// This is just used to forward Windows messages from a global window
@@ -46,11 +50,17 @@ D3DApp::D3DApp(HINSTANCE hInstance)
 	g_pd3dApp = this;
 }
 
+
 D3DApp::~D3DApp()
 {
 	// 恢复所有默认设定
 	if (m_pd3dImmediateContext)
 		m_pd3dImmediateContext->ClearState();
+#ifdef USE_IMGUI
+	ImGui_ImplDX11_Shutdown();
+	ImGui_ImplWin32_Shutdown();
+	ImGui::DestroyContext();
+#endif
 }
 
 HINSTANCE D3DApp::AppInst()const
@@ -88,6 +98,11 @@ int D3DApp::Run()
 			if (!m_AppPaused)
 			{
 				CalculateFrameStats();
+#ifdef USE_IMGUI
+				ImGui_ImplDX11_NewFrame();
+				ImGui_ImplWin32_NewFrame();
+				ImGui::NewFrame();
+#endif
 				UpdateScene(m_Timer.DeltaTime());
 				DrawScene();
 			}
@@ -106,8 +121,19 @@ bool D3DApp::Init()
 	if (!InitMainWindow())
 		return false;
 
+	if (!InitDirect2D())
+		return false;
+
 	if (!InitDirect3D())
 		return false;
+
+#ifdef USE_IMGUI
+	if (!InitImGui())
+		return false;
+#else
+	m_pMouse = std::make_unique<DirectX::Mouse>();
+	m_pKeyboard = std::make_unique<DirectX::Keyboard>();
+#endif
 
 	return true;
 }
@@ -132,10 +158,10 @@ void D3DApp::OnResize()
 
 	// 重设交换链并且重新创建渲染目标视图
 	ComPtr<ID3D11Texture2D> backBuffer;
-	HR(m_pSwapChain->ResizeBuffers(1, m_ClientWidth, m_ClientHeight, DXGI_FORMAT_R8G8B8A8_UNORM, 0));
+	HR(m_pSwapChain->ResizeBuffers(1, m_ClientWidth, m_ClientHeight, DXGI_FORMAT_B8G8R8A8_UNORM, 0));	// 注意此处DXGI_FORMAT_B8G8R8A8_UNORM
 	HR(m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(backBuffer.GetAddressOf())));
 	HR(m_pd3dDevice->CreateRenderTargetView(backBuffer.Get(), nullptr, m_pRenderTargetView.GetAddressOf()));
-	
+
 	// 设置调试对象名
 	D3D11SetDebugObjectName(backBuffer.Get(), "BackBuffer[0]");
 
@@ -150,7 +176,7 @@ void D3DApp::OnResize()
 	depthStencilDesc.ArraySize = 1;
 	depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 
-	// 要使用 4X MSAA? --需要给交换链设置MASS参数
+	// 要使用 4X MSAA?
 	if (m_Enable4xMsaa)
 	{
 		depthStencilDesc.SampleDesc.Count = 4;
@@ -161,7 +187,6 @@ void D3DApp::OnResize()
 		depthStencilDesc.SampleDesc.Count = 1;
 		depthStencilDesc.SampleDesc.Quality = 0;
 	}
-	
 
 
 	depthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -196,6 +221,11 @@ void D3DApp::OnResize()
 
 LRESULT D3DApp::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
+#ifdef USE_IMGUI
+	if (ImGui_ImplWin32_WndProcHandler(m_hMainWnd, msg, wParam, lParam))
+		return true;
+#endif
+
 	switch (msg)
 	{
 		// WM_ACTIVATE is sent when the window is activated or deactivated.  
@@ -304,16 +334,38 @@ LRESULT D3DApp::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		((MINMAXINFO*)lParam)->ptMinTrackSize.y = 200;
 		return 0;
 
+#ifndef USE_IMGUI
+		// 监测这些键盘/鼠标事件
+	case WM_INPUT:
+
 	case WM_LBUTTONDOWN:
 	case WM_MBUTTONDOWN:
 	case WM_RBUTTONDOWN:
-		return 0;
+	case WM_XBUTTONDOWN:
+
 	case WM_LBUTTONUP:
 	case WM_MBUTTONUP:
 	case WM_RBUTTONUP:
-		return 0;
+	case WM_XBUTTONUP:
+
+	case WM_MOUSEWHEEL:
+	case WM_MOUSEHOVER:
 	case WM_MOUSEMOVE:
+		m_pMouse->ProcessMessage(msg, wParam, lParam);
 		return 0;
+
+	case WM_KEYDOWN:
+	case WM_SYSKEYDOWN:
+	case WM_KEYUP:
+	case WM_SYSKEYUP:
+		m_pKeyboard->ProcessMessage(msg, wParam, lParam);
+		return 0;
+
+	case WM_ACTIVATEAPP:
+		m_pMouse->ProcessMessage(msg, wParam, lParam);
+		m_pKeyboard->ProcessMessage(msg, wParam, lParam);
+		return 0;
+#endif
 	}
 
 	return DefWindowProc(hwnd, msg, wParam, lParam);
@@ -340,6 +392,10 @@ bool D3DApp::InitMainWindow()
 		return false;
 	}
 
+	// 将窗口调整到中心
+	int screenWidth = GetSystemMetrics(SM_CXSCREEN);
+	int screenHeight = GetSystemMetrics(SM_CYSCREEN);
+
 	// Compute window rectangle dimensions based on requested client area dimensions.
 	RECT R = { 0, 0, m_ClientWidth, m_ClientHeight };
 	AdjustWindowRect(&R, WS_OVERLAPPEDWINDOW, false);
@@ -347,7 +403,8 @@ bool D3DApp::InitMainWindow()
 	int height = R.bottom - R.top;
 
 	m_hMainWnd = CreateWindow(L"D3DWndClassName", m_MainWndCaption.c_str(),
-		WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, width, height, 0, 0, m_hAppInst, 0);
+		WS_OVERLAPPEDWINDOW, (screenWidth - width) / 2, (screenHeight - height) / 2, width, height, 0, 0, m_hAppInst, 0);
+
 	if (!m_hMainWnd)
 	{
 		MessageBox(0, L"CreateWindow Failed.", 0, 0);
@@ -360,12 +417,24 @@ bool D3DApp::InitMainWindow()
 	return true;
 }
 
+bool D3DApp::InitDirect2D()
+{
+	HR(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, m_pd2dFactory.GetAddressOf()));
+	HR(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory),
+		reinterpret_cast<IUnknown**>(m_pdwriteFactory.GetAddressOf())));
+
+	return true;
+}
+
 bool D3DApp::InitDirect3D()
 {
 	HRESULT hr = S_OK;
 
 	// 创建D3D设备 和 D3D设备上下文
 	UINT createDeviceFlags = 0;
+#ifndef USE_IMGUI
+	createDeviceFlags |= D3D11_CREATE_DEVICE_BGRA_SUPPORT;	// Direct2D需要支持BGRA格式
+#endif
 #if defined(DEBUG) || defined(_DEBUG)  
 	createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
@@ -449,7 +518,11 @@ bool D3DApp::InitDirect3D()
 		ZeroMemory(&sd, sizeof(sd));
 		sd.Width = m_ClientWidth;
 		sd.Height = m_ClientHeight;
+#ifdef USE_IMGUI
 		sd.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+#else
+		sd.Format = DXGI_FORMAT_B8G8R8A8_UNORM;		// 注意此处DXGI_FORMAT_B8G8R8A8_UNORM
+#endif
 		// 是否开启4倍多重采样？
 		if (m_Enable4xMsaa)
 		{
@@ -485,7 +558,11 @@ bool D3DApp::InitDirect3D()
 		sd.BufferDesc.Height = m_ClientHeight;
 		sd.BufferDesc.RefreshRate.Numerator = 60;
 		sd.BufferDesc.RefreshRate.Denominator = 1;
+#ifdef USE_IMGUI
 		sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+#else
+		sd.BufferDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;		// 注意此处DXGI_FORMAT_B8G8R8A8_UNORM
+#endif
 		sd.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
 		sd.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
 		// 是否开启4倍多重采样？
@@ -508,8 +585,6 @@ bool D3DApp::InitDirect3D()
 		HR(dxgiFactory1->CreateSwapChain(m_pd3dDevice.Get(), &sd, m_pSwapChain.GetAddressOf()));
 	}
 
-	
-
 	// 可以禁止alt+enter全屏
 	dxgiFactory1->MakeWindowAssociation(m_hMainWnd, DXGI_MWA_NO_ALT_ENTER | DXGI_MWA_NO_WINDOW_CHANGES);
 
@@ -523,6 +598,27 @@ bool D3DApp::InitDirect3D()
 
 	return true;
 }
+
+#if USE_IMGUI
+bool D3DApp::InitImGui()
+{
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO();
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // 允许键盘控制
+	io.ConfigWindowsMoveFromTitleBarOnly = true;              // 仅允许标题拖动
+
+	// 设置Dear ImGui风格
+	ImGui::StyleColorsDark();
+
+	// 设置平台/渲染器后端
+	ImGui_ImplWin32_Init(m_hMainWnd);
+	ImGui_ImplDX11_Init(m_pd3dDevice.Get(), m_pd3dImmediateContext.Get());
+
+	return true;
+
+}
+#endif
 
 void D3DApp::CalculateFrameStats()
 {

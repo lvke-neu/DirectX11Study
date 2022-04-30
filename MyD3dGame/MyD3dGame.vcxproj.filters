@@ -6,39 +6,57 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="GameFramework\GameApp.cpp">
+      <Filter>GameFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="GameFramework\Main.cpp">
+      <Filter>GameFramework</Filter>
+    </ClCompile>
     <ClCompile Include="GameFramework\d3dApp.cpp">
       <Filter>GameFramework</Filter>
     </ClCompile>
     <ClCompile Include="GameFramework\d3dUtil.cpp">
       <Filter>GameFramework</Filter>
     </ClCompile>
-    <ClCompile Include="GameFramework\DXTrace.cpp">
+    <ClCompile Include="GameFramework\DDSTextureLoader.cpp">
       <Filter>GameFramework</Filter>
     </ClCompile>
-    <ClCompile Include="GameFramework\GameApp.cpp">
+    <ClCompile Include="GameFramework\DXTrace.cpp">
       <Filter>GameFramework</Filter>
     </ClCompile>
     <ClCompile Include="GameFramework\GameTimer.cpp">
       <Filter>GameFramework</Filter>
     </ClCompile>
-    <ClCompile Include="GameFramework\Main.cpp">
+    <ClCompile Include="GameFramework\Keyboard.cpp">
+      <Filter>GameFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="GameFramework\Mouse.cpp">
       <Filter>GameFramework</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GameFramework\GameApp.h">
+      <Filter>GameFramework</Filter>
+    </ClInclude>
     <ClInclude Include="GameFramework\d3dApp.h">
       <Filter>GameFramework</Filter>
     </ClInclude>
     <ClInclude Include="GameFramework\d3dUtil.h">
       <Filter>GameFramework</Filter>
     </ClInclude>
+    <ClInclude Include="GameFramework\DDSTextureLoader.h">
+      <Filter>GameFramework</Filter>
+    </ClInclude>
     <ClInclude Include="GameFramework\DXTrace.h">
       <Filter>GameFramework</Filter>
     </ClInclude>
-    <ClInclude Include="GameFramework\GameApp.h">
+    <ClInclude Include="GameFramework\GameTimer.h">
       <Filter>GameFramework</Filter>
     </ClInclude>
-    <ClInclude Include="GameFramework\GameTimer.h">
+    <ClInclude Include="GameFramework\Keyboard.h">
+      <Filter>GameFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="GameFramework\Mouse.h">
       <Filter>GameFramework</Filter>
     </ClInclude>
   </ItemGroup>

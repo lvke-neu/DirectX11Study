@@ -26,16 +26,26 @@ void GameApp::OnResize()
 
 void GameApp::UpdateScene(float dt)
 {
-
+#ifdef USE_IMGUI
+	ImGuiIO& io = ImGui::GetIO();
+	ImGui::Begin("Lighting");
+	ImGui::Text("Material");
+	ImGui::End();
+	ImGui::Render();
+#endif
 }
 
 void GameApp::DrawScene()
 {
 	assert(m_pd3dImmediateContext);
 	assert(m_pSwapChain);
-	static float blue[4] = { 0.0f, 0.0f, 1.0f, 1.0f };	// RGBA = (0,0,255,255)
-	m_pd3dImmediateContext->ClearRenderTargetView(m_pRenderTargetView.Get(), blue);
+	static float color[4] = { 0.0f, 0.0f, 0.0f, 1.0f };	// RGBA = (0,0,255,255)
+	m_pd3dImmediateContext->ClearRenderTargetView(m_pRenderTargetView.Get(), color);
 	m_pd3dImmediateContext->ClearDepthStencilView(m_pDepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+
+#ifdef USE_IMGUI
+	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+#endif
 
 	HR(m_pSwapChain->Present(0, 0));
 }

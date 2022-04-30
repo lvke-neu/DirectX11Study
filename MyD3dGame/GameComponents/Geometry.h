@@ -1,5 +1,5 @@
 
-//先只支持 pos+normal+tex类型的点
+//鍏堝彧鏀寔 pos+normal+tex绫诲瀷鐨勭偣
 #pragma once
 #include <DirectXMath.h>
 #include <vector>
@@ -14,7 +14,7 @@ struct VertexPosNormalTex
 	XMFLOAT2 tex;
 };
 
-//Mesh数据包括 vertex与index
+//Mesh鏁版嵁鍖呮嫭 vertex涓巌ndex
 struct Mesh   
 {
 	std::vector<VertexPosNormalTex> vertexbuffer;
@@ -24,5 +24,5 @@ struct Mesh
 class Geometry
 {
 public:
-	static Mesh createBoxMesh(); //创建长宽高为1的立方体
+	static Mesh createBoxMesh(); //鍒涘缓闀垮楂樹负1鐨勭珛鏂逛綋
 };

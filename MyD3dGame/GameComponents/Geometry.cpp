@@ -4,32 +4,32 @@ Mesh Geometry::createBoxMesh()
 {
 	Mesh boxMesh;
 	boxMesh.vertexbuffer.resize(24);
-	// ”“√Ê(+X√Ê)
+	// Âè≥Èù¢(+XÈù¢)
 	boxMesh.vertexbuffer[0].pos = XMFLOAT3(1, -1, -1);
 	boxMesh.vertexbuffer[1].pos = XMFLOAT3(1, 1, -1);
 	boxMesh.vertexbuffer[2].pos = XMFLOAT3(1, 1, 1);
 	boxMesh.vertexbuffer[3].pos = XMFLOAT3(1, -1, 1);
-	// ◊Û√Ê(-X√Ê)
+	// Â∑¶Èù¢(-XÈù¢)
 	boxMesh.vertexbuffer[4].pos = XMFLOAT3(-1, -1, 1);
 	boxMesh.vertexbuffer[5].pos = XMFLOAT3(-1, 1, 1);
 	boxMesh.vertexbuffer[6].pos = XMFLOAT3(-1, 1, -1);
 	boxMesh.vertexbuffer[7].pos = XMFLOAT3(-1, -1, -1);
-	// ∂•√Ê(+Y√Ê)
+	// È°∂Èù¢(+YÈù¢)
 	boxMesh.vertexbuffer[8].pos = XMFLOAT3(-1, 1, -1);
 	boxMesh.vertexbuffer[9].pos = XMFLOAT3(-1, 1, 1);
 	boxMesh.vertexbuffer[10].pos = XMFLOAT3(1, 1, 1);
 	boxMesh.vertexbuffer[11].pos = XMFLOAT3(1, 1, -1);
-	// µ◊√Ê(-Y√Ê)
+	// Â∫ïÈù¢(-YÈù¢)
 	boxMesh.vertexbuffer[12].pos = XMFLOAT3(1, -1, -1);
 	boxMesh.vertexbuffer[13].pos = XMFLOAT3(1, -1, 1);
 	boxMesh.vertexbuffer[14].pos = XMFLOAT3(-1, -1, 1);
 	boxMesh.vertexbuffer[15].pos = XMFLOAT3(-1, -1, -1);
-	// ±≥√Ê(+Z√Ê)
+	// ËÉåÈù¢(+ZÈù¢)
 	boxMesh.vertexbuffer[16].pos = XMFLOAT3(1, -1, 1);
 	boxMesh.vertexbuffer[17].pos = XMFLOAT3(1, 1, 1);
 	boxMesh.vertexbuffer[18].pos = XMFLOAT3(-1, 1, 1);
 	boxMesh.vertexbuffer[19].pos = XMFLOAT3(-1, -1, 1);
-	// ’˝√Ê(-Z√Ê)
+	// Ê≠£Èù¢(-ZÈù¢)
 	boxMesh.vertexbuffer[20].pos = XMFLOAT3(-1, -1, -1);
 	boxMesh.vertexbuffer[21].pos = XMFLOAT3(-1, 1, -1);
 	boxMesh.vertexbuffer[22].pos = XMFLOAT3(1, 1, -1);
@@ -38,22 +38,22 @@ Mesh Geometry::createBoxMesh()
 
 	for (int i = 0; i < 4; i++)
 	{
-		// ”“√Ê(+X√Ê)
+		// Âè≥Èù¢(+XÈù¢)
 		boxMesh.vertexbuffer[i].normal = XMFLOAT3(1.0f, 0.0f, 0.0f);
 
-		// ◊Û√Ê(-X√Ê)
+		// Â∑¶Èù¢(-XÈù¢)
 		boxMesh.vertexbuffer[i + 4].normal = XMFLOAT3(-1.0f, 0.0f, 0.0f);
 
-		// ∂•√Ê(+Y√Ê)
+		// È°∂Èù¢(+YÈù¢)
 		boxMesh.vertexbuffer[i + 8].normal = XMFLOAT3(0.0f, 1.0f, 0.0f);
 
-		// µ◊√Ê(-Y√Ê)
+		// Â∫ïÈù¢(-YÈù¢)
 		boxMesh.vertexbuffer[i + 12].normal = XMFLOAT3(0.0f, -1.0f, 0.0f);
 
-		// ±≥√Ê(+Z√Ê)
+		// ËÉåÈù¢(+ZÈù¢)
 		boxMesh.vertexbuffer[i + 16].normal = XMFLOAT3(0.0f, 0.0f, 1.0f);
 
-		// ’˝√Ê(-Z√Ê)
+		// Ê≠£Èù¢(-ZÈù¢)
 		boxMesh.vertexbuffer[i + 20].normal = XMFLOAT3(0.0f, 0.0f, -1.0f);
 	}
 
@@ -67,12 +67,12 @@ Mesh Geometry::createBoxMesh()
 
 	boxMesh.indexbuffer =
 	{
-		0, 1, 2, 2, 3, 0,		// ”“√Ê(+X√Ê)
-		4, 5, 6, 6, 7, 4,		// ◊Û√Ê(-X√Ê)
-		8, 9, 10, 10, 11, 8,	// ∂•√Ê(+Y√Ê)
-		12, 13, 14, 14, 15, 12,	// µ◊√Ê(-Y√Ê)
-		16, 17, 18, 18, 19, 16, // ±≥√Ê(+Z√Ê)
-		20, 21, 22, 22, 23, 20	// ’˝√Ê(-Z√Ê)
+		0, 1, 2, 2, 3, 0,		// Âè≥Èù¢(+XÈù¢)
+		4, 5, 6, 6, 7, 4,		// Â∑¶Èù¢(-XÈù¢)
+		8, 9, 10, 10, 11, 8,	// È°∂Èù¢(+YÈù¢)
+		12, 13, 14, 14, 15, 12,	// Â∫ïÈù¢(-YÈù¢)
+		16, 17, 18, 18, 19, 16, // ËÉåÈù¢(+ZÈù¢)
+		20, 21, 22, 22, 23, 20	// Ê≠£Èù¢(-ZÈù¢)
 	};
 
 	return boxMesh;

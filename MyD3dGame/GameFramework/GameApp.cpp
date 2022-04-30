@@ -54,12 +54,13 @@ void GameApp::DrawScene()
 	static float color[4] = { 0.0f, 0.0f, 0.0f, 1.0f };	// RGBA = (0,0,255,255)
 	m_pd3dImmediateContext->ClearRenderTargetView(m_pRenderTargetView.Get(), color);
 	m_pd3dImmediateContext->ClearDepthStencilView(m_pDepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-
 #ifdef USE_IMGUI
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 #endif
 
+
 	m_box->Draw(m_boxMesh.indexbuffer.size());
+
 
 	HR(m_pSwapChain->Present(0, 0));
 }
@@ -70,7 +71,7 @@ void GameApp::InitResource()
 		delete m_box;
 	m_box = new GameObject(m_pd3dDevice, m_pd3dImmediateContext);
 	m_box->CreateBuffer(m_boxMesh);
-	m_box->CreateTexture(L"Texture\\WoodCrate.dds");
+	m_box->CreateTexture(L"Texture\\flare.dds");
 	m_box->CreateShader();
 	m_box->setTransform(Transform(XMFLOAT3(1.0f, 1.0f, 1.0f), XMFLOAT3(0.5f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f)));
 	m_box->UpdateWorldViewProjMatrix(AspectRatio());

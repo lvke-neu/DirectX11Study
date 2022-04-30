@@ -4,6 +4,12 @@
     <Filter Include="GameFramework">
       <UniqueIdentifier>{ce78ff6e-cf68-4432-a31e-389c3155ad54}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameComponents">
+      <UniqueIdentifier>{cc693ee3-cc10-402b-a3a9-11421355a577}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HLSL">
+      <UniqueIdentifier>{670c1629-2de9-481a-866c-5f5d19b9ffc1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameFramework\GameApp.cpp">
@@ -33,6 +39,15 @@
     <ClCompile Include="GameFramework\Mouse.cpp">
       <Filter>GameFramework</Filter>
     </ClCompile>
+    <ClCompile Include="GameComponents\GameObject.cpp">
+      <Filter>GameComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="GameComponents\Geometry.cpp">
+      <Filter>GameComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="GameComponents\Transform.cpp">
+      <Filter>GameComponents</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameFramework\GameApp.h">
@@ -59,5 +74,33 @@
     <ClInclude Include="GameFramework\Mouse.h">
       <Filter>GameFramework</Filter>
     </ClInclude>
+    <ClInclude Include="GameComponents\GameObject.h">
+      <Filter>GameComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="GameComponents\Geometry.h">
+      <Filter>GameComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="GameComponents\LightHelper.h">
+      <Filter>GameComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="GameComponents\Transform.h">
+      <Filter>GameComponents</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="HLSL\Common.hlsli">
+      <Filter>HLSL</Filter>
+    </None>
+    <None Include="HLSL\LightHelper.hlsli">
+      <Filter>HLSL</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="HLSL\Common_PS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\Common_VS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

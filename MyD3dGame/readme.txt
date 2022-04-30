@@ -1,0 +1,1 @@
+编译完成后：将Texture文件夹拷贝到bin/$(Platform) 目录下， 将HLSL的所有.cso文件拷贝到bin/$(Platform) 目录下，即可直接运行.exe 。

@@ -9,12 +9,16 @@ GameApp::GameApp(HINSTANCE hInstance)
 
 GameApp::~GameApp()
 {
+	if (m_box)
+		delete m_box;
 }
 
 bool GameApp::Init()
 {
 	if (!D3DApp::Init())
 		return false;
+
+	InitResource();
 
 	return true;
 }
@@ -33,6 +37,14 @@ void GameApp::UpdateScene(float dt)
 	ImGui::End();
 	ImGui::Render();
 #endif
+
+	static float sumDt = 0;
+	sumDt += dt;
+	//让立方体动起来
+	m_box->setRotation(XMFLOAT3(XM_PI / 4 * sumDt, 0, 0));
+	m_box->UpdateWorldViewProjMatrix(AspectRatio());
+
+
 }
 
 void GameApp::DrawScene()
@@ -47,5 +59,21 @@ void GameApp::DrawScene()
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 #endif
 
+	m_box->Draw(m_boxMesh.indexbuffer.size());
+
 	HR(m_pSwapChain->Present(0, 0));
+}
+
+void GameApp::InitResource()
+{
+	if (m_box)
+		delete m_box;
+	m_box = new GameObject(m_pd3dDevice, m_pd3dImmediateContext);
+	m_box->CreateBuffer(m_boxMesh);
+	m_box->CreateTexture(L"Texture\\WoodCrate.dds");
+	m_box->CreateShader();
+	m_box->setTransform(Transform(XMFLOAT3(1.0f, 1.0f, 1.0f), XMFLOAT3(0.5f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f)));
+	m_box->UpdateWorldViewProjMatrix(AspectRatio());
+	m_box->UpdateLight(DLight);
+	m_box->BindToRenderPipeline();
 }

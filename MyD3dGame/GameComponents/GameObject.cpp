@@ -116,12 +116,7 @@ void GameObject::UpdateWorldViewProjMatrix(float AspectRatio)
 {
 	VSConstantBuffer vsConstantBuffer;
 	vsConstantBuffer.world = XMMatrixTranspose(m_transform.getWorldMatrix());
-	//m_CBuffer.view = XMMatrixTranspose(Camera::getInstance().getViewMatrix());
-	vsConstantBuffer.view = XMMatrixTranspose(XMMatrixLookAtLH(
-		XMVectorSet(0.0f, 0.0f, -5.0f, 0.0f),
-		XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f),
-		XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f)
-	));
+	vsConstantBuffer.view = XMMatrixTranspose(Camera::getInstance().getViewMatrix());
 	vsConstantBuffer.proj = XMMatrixTranspose(XMMatrixPerspectiveFovLH(XM_PI / 3, AspectRatio, 0.5f, 1000.0f));
 	DirectX::XMMATRIX A = m_transform.getWorldMatrix();
 	A.r[3] = g_XMIdentityR3;
@@ -137,6 +132,12 @@ void GameObject::UpdateLight(LightType lt)
 {
 	// ******************
 	// 初始化默认光照
+	/*
+	*高光反射就是基本上就是光源反射 specular
+	*漫反射就是光源打在不光滑的物体上的反射 diffuse
+	*环境光是打个太阳的比方，太阳在一天之内的颜色是不一样的。ambient
+	*/
+
 	// 方向光
 	DirectionalLight dirLight;
 	dirLight.ambient = XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
@@ -196,7 +197,9 @@ void GameObject::UpdateLight(LightType lt)
 	psConstantBuffer.material.diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	psConstantBuffer.material.specular = XMFLOAT4(0.5f, 0.5f, 0.5f, 5.0f);
 
-	psConstantBuffer.eyePos = XMFLOAT4(0.0f, 0.0f, -5.0f, 0.0f);
+
+	;
+	psConstantBuffer.eyePos = XMFLOAT4(Camera::getInstance().getPosition().x, Camera::getInstance().getPosition().y, Camera::getInstance().getPosition().z, 0.0f);
 
 	// 更新PS常量缓冲区资源
 	D3D11_MAPPED_SUBRESOURCE mappedData;

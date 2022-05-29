@@ -48,6 +48,9 @@
     <ClCompile Include="GameComponents\Transform.cpp">
       <Filter>GameComponents</Filter>
     </ClCompile>
+    <ClCompile Include="GameComponents\Camera.cpp">
+      <Filter>GameComponents</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameFramework\GameApp.h">
@@ -84,6 +87,9 @@
       <Filter>GameComponents</Filter>
     </ClInclude>
     <ClInclude Include="GameComponents\Transform.h">
+      <Filter>GameComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="GameComponents\Camera.h">
       <Filter>GameComponents</Filter>
     </ClInclude>
   </ItemGroup>

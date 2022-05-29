@@ -7,8 +7,8 @@ class Transform
 
 public:
 	Transform();
-	Transform(const Transform& transform);
 	Transform(const XMFLOAT3& scale, const XMFLOAT3& rotation, const XMFLOAT3& position);
+	Transform(const Transform& transform);
 	Transform& operator=(const Transform& transform);
 	XMMATRIX getWorldMatrix();
 
@@ -18,6 +18,23 @@ public:
 	void setRotation(const XMFLOAT3& rotation) { m_rotation = rotation; }
 	inline XMFLOAT3 getPosition() { return m_position; }
 	void setPosition(const XMFLOAT3& position) { m_position = position; }
+
+	XMFLOAT3 getForwarDir()
+	{
+		XMMATRIX rotMatrix = XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&m_rotation));
+		XMFLOAT3 forward;
+		XMStoreFloat3(&forward, rotMatrix.r[2]);
+		return forward;
+	}
+
+	XMFLOAT3 getRightDir()
+	{
+		XMMATRIX rotMatrix = XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&m_rotation));
+		XMFLOAT3 forward;
+		XMStoreFloat3(&forward, rotMatrix.r[0]);
+		return forward;
+	}
+
 
 private:
 	XMFLOAT3 m_scale;

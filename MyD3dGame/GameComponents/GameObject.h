@@ -1,12 +1,13 @@
 #pragma once
 
-
 #include <wrl/client.h>
 #include "../GameFramework/DXTrace.h"
 #include "../GameFramework/d3dUtil.h"
 #include "Transform.h"
 #include "Geometry.h"
 #include "LightHelper.h"
+#include "Camera.h"
+
 
 template <class T>
 using ComPtr = Microsoft::WRL::ComPtr<T>;

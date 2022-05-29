@@ -25,4 +25,5 @@ class Geometry
 {
 public:
 	static Mesh createBoxMesh(); //创建长宽高为1的立方体
+	static Mesh createPlane(float width, float depth, float texU, float texV);//创建面
 };

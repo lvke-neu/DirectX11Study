@@ -35,5 +35,6 @@ float4 PS(VertexOut pIn) : SV_Target
 
 	litColor.a = g_Material.Diffuse.a;
 
-	return litColor;
+	//return litColor;
+	return texColor;
 }

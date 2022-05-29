@@ -7,13 +7,6 @@ Transform::Transform()
 	m_position = XMFLOAT3(0.0f, 0.0f, 0.0f);
 }
 
-Transform::Transform(const Transform& transform)
-{
-	m_scale = transform.m_scale;
-	m_rotation = transform.m_rotation;
-	m_position = transform.m_position;
-}
-
 Transform::Transform(const XMFLOAT3& scale, const XMFLOAT3& rotation, const XMFLOAT3& position)
 {
 	m_scale = scale;
@@ -21,11 +14,19 @@ Transform::Transform(const XMFLOAT3& scale, const XMFLOAT3& rotation, const XMFL
 	m_position = position;
 }
 
+Transform::Transform(const Transform& transform)
+{
+	m_scale = transform.m_scale;
+	m_rotation = transform.m_rotation;
+	m_position = transform.m_position;
+}
+
 Transform& Transform::operator=(const Transform& transform)
 {
 	m_scale = transform.m_scale;
 	m_rotation = transform.m_rotation;
 	m_position = transform.m_position;
+	
 	return *this;
 }
 

@@ -51,7 +51,7 @@
     <ClCompile Include="GameComponents\Camera.cpp">
       <Filter>GameComponents</Filter>
     </ClCompile>
-    <ClCompile Include="GameComponents\LightManager.cpp">
+    <ClCompile Include="GameComponents\GameObjectManager.cpp">
       <Filter>GameComponents</Filter>
     </ClCompile>
   </ItemGroup>
@@ -95,7 +95,7 @@
     <ClInclude Include="GameComponents\Camera.h">
       <Filter>GameComponents</Filter>
     </ClInclude>
-    <ClInclude Include="GameComponents\LightManager.h">
+    <ClInclude Include="GameComponents\GameObjectManager.h">
       <Filter>GameComponents</Filter>
     </ClInclude>
   </ItemGroup>

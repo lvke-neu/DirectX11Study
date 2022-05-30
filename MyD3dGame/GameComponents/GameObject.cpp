@@ -1,5 +1,5 @@
 #include "GameObject.h"
-
+#include "Camera.h"
 void GameObject::init(const Mesh& mesh, const wchar_t* texturePath, const Transform& transform, float aspectRatio)
 {
 
@@ -8,7 +8,7 @@ void GameObject::init(const Mesh& mesh, const wchar_t* texturePath, const Transf
 	createShader();
 	setTransform(transform);
 	updateWorldViewProjMatrix(aspectRatio);
-	updateLight(DLight);
+	updateLight(PLight);
 }
 
 void GameObject::createBuffer(const Mesh& mesh)
@@ -158,14 +158,14 @@ void GameObject::updateLight(LightType lt)
 	dirLight.ambient = XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
 	dirLight.diffuse = XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f);
 	dirLight.specular = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
-	dirLight.direction = XMFLOAT3(-0.577f, -0.577f, 0.577f);
+	dirLight.direction = XMFLOAT3(-0.5f, -0.5f, 0.0f);
 	
 	// 点光
-	PointLight pointLight;
-	pointLight.position = XMFLOAT3(0.0f, 8.0f, 0.0f);
+	PointLight pointLight; 
+	pointLight.position = XMFLOAT3(0.0f, 15.0f, 0.0f);
 	pointLight.ambient = XMFLOAT4(0.3f, 0.3f, 0.3f, 1.0f);
 	pointLight.diffuse = XMFLOAT4(0.7f, 0.7f, 0.7f, 1.0f);
-	pointLight.specular = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
+	pointLight.specular = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	pointLight.att = XMFLOAT3(0.0f, 0.1f, 0.0f);
 	pointLight.range = 25.0f;
 	// 聚光灯

@@ -21,8 +21,8 @@
   <ItemGroup>
     <ClCompile Include="GameComponents\Camera.cpp" />
     <ClCompile Include="GameComponents\GameObject.cpp" />
+    <ClCompile Include="GameComponents\GameObjectManager.cpp" />
     <ClCompile Include="GameComponents\Geometry.cpp" />
-    <ClCompile Include="GameComponents\LightManager.cpp" />
     <ClCompile Include="GameComponents\Transform.cpp" />
     <ClCompile Include="GameFramework\d3dApp.cpp" />
     <ClCompile Include="GameFramework\d3dUtil.cpp" />
@@ -37,8 +37,8 @@
   <ItemGroup>
     <ClInclude Include="GameComponents\Camera.h" />
     <ClInclude Include="GameComponents\GameObject.h" />
+    <ClInclude Include="GameComponents\GameObjectManager.h" />
     <ClInclude Include="GameComponents\Geometry.h" />
-    <ClInclude Include="GameComponents\LightManager.h" />
     <ClInclude Include="GameComponents\LightHelper.h" />
     <ClInclude Include="GameComponents\Transform.h" />
     <ClInclude Include="GameFramework\d3dApp.h" />

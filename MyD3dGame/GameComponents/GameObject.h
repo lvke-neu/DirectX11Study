@@ -6,7 +6,7 @@
 #include "Transform.h"
 #include "Geometry.h"
 #include "LightHelper.h"
-#include "Camera.h"
+
 
 
 template <class T>

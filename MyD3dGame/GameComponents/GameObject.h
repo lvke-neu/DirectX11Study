@@ -35,13 +35,14 @@ public:
 	GameObject(ComPtr<ID3D11Device> pd3dDevice, ComPtr<ID3D11DeviceContext> pd3dImmediateContext) :
 		m_pd3dDevice(pd3dDevice), m_pd3dImmediateContext(pd3dImmediateContext) {}
 
-	void CreateBuffer(Mesh& mesh);
-	void CreateShader();
-	void CreateTexture( const wchar_t* texturePath);
-	void Draw(UINT indexCount);
-	void UpdateWorldViewProjMatrix(float AspectRatio);
-	void UpdateLight(LightType lt);
-	void BindToRenderPipeline();
+	void createBuffer(const Mesh& mesh);
+	void createShader();
+	void createTexture( const wchar_t* texturePath);
+	void updateWorldViewProjMatrix(float AspectRatio);
+	void updateLight(LightType lt);
+	void bindToRenderPipeline();
+	void draw(UINT indexCount);
+	void init(const Mesh& mesh, const wchar_t* texturePath, const Transform& transform, float aspectRatio);
 
 	void setTransform(const Transform& transform){ m_transform = transform; }
 	Transform getTransform(){ return m_transform; }
@@ -65,9 +66,8 @@ private:
 	ComPtr<ID3D11ShaderResourceView> m_pTexture;			    // 木盒纹理
 	ComPtr<ID3D11SamplerState> m_pSamplerState;				    // 采样器状态
 
+
 	Transform m_transform; //变换
 	ComPtr<ID3D11Device> m_pd3dDevice;
 	ComPtr<ID3D11DeviceContext> m_pd3dImmediateContext;
-
-
 };

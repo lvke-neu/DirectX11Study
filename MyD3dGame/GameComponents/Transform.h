@@ -10,6 +10,7 @@ public:
 	Transform(const XMFLOAT3& scale, const XMFLOAT3& rotation, const XMFLOAT3& position);
 	Transform(const Transform& transform);
 	Transform& operator=(const Transform& transform);
+	bool operator==(const Transform& transform);
 	XMMATRIX getWorldMatrix();
 
 	inline XMFLOAT3 getScale() { return m_scale; }

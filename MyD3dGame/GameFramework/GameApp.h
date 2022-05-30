@@ -3,8 +3,17 @@
 #include "d3dApp.h"
 #include "../GameComponents/GameObject.h"
 
+class GameObjectManager
+{
+public:
+	static void gameObjectInit();
+	static void gameObjectUpdate();
+};
+
 class GameApp : public D3DApp
 {
+	
+	friend GameObjectManager;
 public:
 	GameApp(HINSTANCE hInstance);
 	~GameApp();
@@ -14,6 +23,10 @@ public:
 	void UpdateScene(float dt);
 	void DrawScene();
 	void InitResource();
+
+public:
+	void gameObjectInit();
+	void gameObjectUpdate();
 private:
 
 	
@@ -24,6 +37,8 @@ private:
 	GameObject* m_box = nullptr;
 	GameObject* m_around[4] = { nullptr };//前后左右墙
 	GameObject* m_ground = nullptr;
+
+	bool m_bShowMesh = false;
 
 };
 

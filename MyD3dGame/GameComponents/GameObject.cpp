@@ -1,6 +1,17 @@
 #include "GameObject.h"
 
-void GameObject::CreateBuffer(Mesh& mesh)
+void GameObject::init(const Mesh& mesh, const wchar_t* texturePath, const Transform& transform, float aspectRatio)
+{
+
+	createBuffer(mesh);
+	createTexture(texturePath);
+	createShader();
+	setTransform(transform);
+	updateWorldViewProjMatrix(aspectRatio);
+	updateLight(DLight);
+}
+
+void GameObject::createBuffer(const Mesh& mesh)
 {
 	// VertexBuffer
 	D3D11_BUFFER_DESC vbd;
@@ -39,7 +50,7 @@ void GameObject::CreateBuffer(Mesh& mesh)
 
 }
 
-void GameObject::CreateShader()
+void GameObject::createShader()
 {
 	ComPtr<ID3DBlob> blob;
 
@@ -67,7 +78,7 @@ void GameObject::CreateShader()
 
 }
 
-void GameObject::CreateTexture(const wchar_t* texturePath)
+void GameObject::createTexture(const wchar_t* texturePath)
 {
 	// 初始化木箱纹理
 	HR(CreateDDSTextureFromFile(m_pd3dDevice.Get(), texturePath, nullptr, m_pTexture.GetAddressOf()));
@@ -86,15 +97,8 @@ void GameObject::CreateTexture(const wchar_t* texturePath)
 
 }
 
-void GameObject::Draw(UINT indexCount)
-{
 
-
-	m_pd3dImmediateContext->DrawIndexed(indexCount, 0, 0);
-}
-
-
-void GameObject::BindToRenderPipeline()
+void GameObject::bindToRenderPipeline()
 {
 	UINT stride = sizeof(VertexPosNormalTex);	// 跨越字节数
 	UINT offset = 0;						// 起始偏移量
@@ -112,7 +116,18 @@ void GameObject::BindToRenderPipeline()
 	m_pd3dImmediateContext->PSSetShaderResources(0, 1, m_pTexture.GetAddressOf());
 }
 
-void GameObject::UpdateWorldViewProjMatrix(float AspectRatio)
+
+void GameObject::draw(UINT indexCount)
+{
+
+	bindToRenderPipeline();
+	m_pd3dImmediateContext->DrawIndexed(indexCount, 0, 0);
+}
+
+
+
+
+void GameObject::updateWorldViewProjMatrix(float AspectRatio)
 {
 	VSConstantBuffer vsConstantBuffer;
 	vsConstantBuffer.world = XMMatrixTranspose(m_transform.getWorldMatrix());
@@ -128,7 +143,7 @@ void GameObject::UpdateWorldViewProjMatrix(float AspectRatio)
 	m_pd3dImmediateContext->Unmap(m_pConstantBuffer[0].Get(), 0);
 }
 
-void GameObject::UpdateLight(LightType lt)
+void GameObject::updateLight(LightType lt)
 {
 	// ******************
 	// 初始化默认光照
@@ -147,7 +162,7 @@ void GameObject::UpdateLight(LightType lt)
 	
 	// 点光
 	PointLight pointLight;
-	pointLight.position = XMFLOAT3(0.0f, 0.0f, -10.0f);
+	pointLight.position = XMFLOAT3(0.0f, 8.0f, 0.0f);
 	pointLight.ambient = XMFLOAT4(0.3f, 0.3f, 0.3f, 1.0f);
 	pointLight.diffuse = XMFLOAT4(0.7f, 0.7f, 0.7f, 1.0f);
 	pointLight.specular = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);

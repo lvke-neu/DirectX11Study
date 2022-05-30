@@ -36,3 +36,10 @@ XMMATRIX Transform::getWorldMatrix()
 		XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&m_rotation)) *
 		XMMatrixTranslationFromVector(XMLoadFloat3(&m_position));
 }
+
+bool Transform::operator==(const Transform& transform)
+{
+	return (m_scale.x == transform.m_scale.x && m_scale.y == transform.m_scale.y && m_scale.z == transform.m_scale.z &&
+		m_rotation.x == transform.m_rotation.x && m_rotation.y == transform.m_rotation.y && m_rotation.z == transform.m_rotation.z &&
+		m_position.x == transform.m_position.x && m_position.y == transform.m_position.y && m_position.z == transform.m_position.z);
+}

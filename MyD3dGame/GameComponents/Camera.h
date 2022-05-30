@@ -1,9 +1,13 @@
 #pragma once
 
 #include "Transform.h"
+#include <wrl/client.h>
+#include "../GameFramework/d3dUtil.h"
+#include "../GameFramework/DXTrace.h"
 
 
-
+template <class T>
+using ComPtr = Microsoft::WRL::ComPtr<T>;
 class Camera
 {
 public:
@@ -80,12 +84,15 @@ public:
 		return camera;
 	}
 
+public:
+	void startRasterization(bool b, ComPtr<ID3D11Device> pd3dDevice, ComPtr<ID3D11DeviceContext> pd3dImmediateContext);
 
 private:
 	Transform m_transform;
-
-private:
 	static Camera camera;
+
+
+	ComPtr<ID3D11RasterizerState> m_pRasterizerState = nullptr;	// 光栅化状态: 线框模式
 };
 
 

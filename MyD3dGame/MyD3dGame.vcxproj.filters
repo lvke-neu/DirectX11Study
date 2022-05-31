@@ -54,6 +54,9 @@
     <ClCompile Include="GameComponents\GameObjectManager.cpp">
       <Filter>GameComponents</Filter>
     </ClCompile>
+    <ClCompile Include="GameFramework\RenderStates.cpp">
+      <Filter>GameFramework</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameFramework\GameApp.h">
@@ -97,6 +100,9 @@
     </ClInclude>
     <ClInclude Include="GameComponents\GameObjectManager.h">
       <Filter>GameComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="GameFramework\RenderStates.h">
+      <Filter>GameFramework</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

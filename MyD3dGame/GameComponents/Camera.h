@@ -83,10 +83,6 @@ public:
 	{
 		return camera;
 	}
-
-public:
-	void startRasterization(bool b, ComPtr<ID3D11Device> pd3dDevice, ComPtr<ID3D11DeviceContext> pd3dImmediateContext);
-
 private:
 	Transform m_transform;
 	static Camera camera;

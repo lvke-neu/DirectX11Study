@@ -24,6 +24,6 @@ struct Mesh
 class Geometry
 {
 public:
-	static Mesh createBoxMesh(); //创建长宽高为1的立方体
-	static Mesh createPlane(float width, float depth, float texU, float texV);//创建面
+	static Mesh createBoxMesh(float width = 2.0f, float height = 2.0f, float depth = 2.0f); //创建长宽高为1的立方体
+	static Mesh createPlaneMesh(float width, float depth, float texU, float texV);//创建面
 };

@@ -1,39 +1,41 @@
 #include "Geometry.h"
 
-Mesh Geometry::createBoxMesh()
+Mesh Geometry::createBoxMesh(float width, float height, float depth)
 {
+	float w2 = width / 2, h2 = height / 2, d2 = depth / 2;
+
 	Mesh boxMesh;
 	boxMesh.vertexbuffer.resize(24);
 	// 右面(+X面)
-	boxMesh.vertexbuffer[0].pos = XMFLOAT3(0.5, -0.5, -0.5);
-	boxMesh.vertexbuffer[1].pos = XMFLOAT3(0.5, 0.5, -0.5);
-	boxMesh.vertexbuffer[2].pos = XMFLOAT3(0.5, 0.5, 0.5);
-	boxMesh.vertexbuffer[3].pos = XMFLOAT3(0.5, -0.5, 0.5);
+	boxMesh.vertexbuffer[0].pos =  XMFLOAT3(w2, -h2, -d2);
+	boxMesh.vertexbuffer[1].pos = XMFLOAT3(w2, h2, -d2);
+	boxMesh.vertexbuffer[2].pos = XMFLOAT3(w2, h2, d2);
+	boxMesh.vertexbuffer[3].pos = XMFLOAT3(w2, -h2, d2);
 	// 左面(-X面)
-	boxMesh.vertexbuffer[4].pos = XMFLOAT3(-0.5, -0.5, 0.5);
-	boxMesh.vertexbuffer[5].pos = XMFLOAT3(-0.5, 0.5, 0.5);
-	boxMesh.vertexbuffer[6].pos = XMFLOAT3(-0.5, 0.5, -0.5);
-	boxMesh.vertexbuffer[7].pos = XMFLOAT3(-0.5, -0.5, -0.5);
+	boxMesh.vertexbuffer[4].pos = XMFLOAT3(-w2, -h2, d2);
+	boxMesh.vertexbuffer[5].pos = XMFLOAT3(-w2, h2, d2);
+	boxMesh.vertexbuffer[6].pos = XMFLOAT3(-w2, h2, -d2);
+	boxMesh.vertexbuffer[7].pos = XMFLOAT3(-w2, -h2, -d2);;
 	// 顶面(+Y面)
-	boxMesh.vertexbuffer[8].pos = XMFLOAT3(-0.5, 0.5, -0.5);
-	boxMesh.vertexbuffer[9].pos = XMFLOAT3(-0.5, 0.5, 0.5);
-	boxMesh.vertexbuffer[10].pos = XMFLOAT3(0.5, 0.5, 0.5);
-	boxMesh.vertexbuffer[11].pos = XMFLOAT3(0.5, 0.5, -0.5);
+	boxMesh.vertexbuffer[8].pos = XMFLOAT3(-w2, h2, -d2);
+	boxMesh.vertexbuffer[9].pos = XMFLOAT3(-w2, h2, d2);
+	boxMesh.vertexbuffer[10].pos = XMFLOAT3(w2, h2, d2);
+	boxMesh.vertexbuffer[11].pos = XMFLOAT3(w2, h2, -d2);
 	// 底面(-Y面)
-	boxMesh.vertexbuffer[12].pos = XMFLOAT3(0.5, -0.5, -0.5);
-	boxMesh.vertexbuffer[13].pos = XMFLOAT3(0.5, -0.5, 0.5);
-	boxMesh.vertexbuffer[14].pos = XMFLOAT3(-0.5, -0.5, 0.5);
-	boxMesh.vertexbuffer[15].pos = XMFLOAT3(-0.5, -0.5, -0.5);
+	boxMesh.vertexbuffer[12].pos = XMFLOAT3(w2, -h2, -d2);
+	boxMesh.vertexbuffer[13].pos = XMFLOAT3(w2, -h2, d2);
+	boxMesh.vertexbuffer[14].pos = XMFLOAT3(-w2, -h2, d2);
+	boxMesh.vertexbuffer[15].pos = XMFLOAT3(-w2, -h2, -d2);;
 	// 背面(+Z面)
-	boxMesh.vertexbuffer[16].pos = XMFLOAT3(0.5, -0.5, 0.5);
-	boxMesh.vertexbuffer[17].pos = XMFLOAT3(0.5, 0.5, 0.5);
-	boxMesh.vertexbuffer[18].pos = XMFLOAT3(-0.5, 0.5, 0.5);
-	boxMesh.vertexbuffer[19].pos = XMFLOAT3(-0.5, -0.5, 0.5);
+	boxMesh.vertexbuffer[16].pos = XMFLOAT3(w2, -h2, d2);
+	boxMesh.vertexbuffer[17].pos = XMFLOAT3(w2, h2, d2);
+	boxMesh.vertexbuffer[18].pos = XMFLOAT3(-w2, h2, d2);
+	boxMesh.vertexbuffer[19].pos = XMFLOAT3(-w2, -h2, d2);
 	// 正面(-Z面)
-	boxMesh.vertexbuffer[20].pos = XMFLOAT3(-0.5, -0.5, -0.5);
-	boxMesh.vertexbuffer[21].pos = XMFLOAT3(-0.5, 0.5, -0.5);
-	boxMesh.vertexbuffer[22].pos = XMFLOAT3(0.5, 0.5, -0.5);
-	boxMesh.vertexbuffer[23].pos = XMFLOAT3(0.5, -0.5, -0.5);
+	boxMesh.vertexbuffer[20].pos = XMFLOAT3(-w2, -h2, -d2);;
+	boxMesh.vertexbuffer[21].pos = XMFLOAT3(-w2, h2, -d2);
+	boxMesh.vertexbuffer[22].pos = XMFLOAT3(w2, h2, -d2);
+	boxMesh.vertexbuffer[23].pos = XMFLOAT3(w2, -h2, -d2);
 
 
 	for (int i = 0; i < 4; i++)
@@ -79,7 +81,7 @@ Mesh Geometry::createBoxMesh()
 }
 
 
-Mesh Geometry::createPlane(float width, float depth, float texU, float texV)
+Mesh Geometry::createPlaneMesh(float width, float depth, float texU, float texV)
 {
 
 	Mesh boxMesh;

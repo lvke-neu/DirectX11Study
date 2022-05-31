@@ -33,6 +33,7 @@
     <ClCompile Include="GameFramework\Keyboard.cpp" />
     <ClCompile Include="GameFramework\Main.cpp" />
     <ClCompile Include="GameFramework\Mouse.cpp" />
+    <ClCompile Include="GameFramework\RenderStates.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameComponents\Camera.h" />
@@ -49,6 +50,7 @@
     <ClInclude Include="GameFramework\GameTimer.h" />
     <ClInclude Include="GameFramework\Keyboard.h" />
     <ClInclude Include="GameFramework\Mouse.h" />
+    <ClInclude Include="GameFramework\RenderStates.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="HLSL\Common.hlsli" />

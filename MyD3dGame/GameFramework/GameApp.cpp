@@ -2,7 +2,7 @@
 #include "d3dUtil.h"
 #include "DXTrace.h"
 #include "../GameComponents/Camera.h"
-
+#include "RenderStates.h"
 GameApp::GameApp(HINSTANCE hInstance)
 	: D3DApp(hInstance)
 {
@@ -19,6 +19,7 @@ bool GameApp::Init()
 		return false;
 
 	InitResource();
+
 
 	return true;
 }
@@ -46,8 +47,6 @@ void GameApp::UpdateScene(float dt)
 
 	//不管有没有变换都更新一边
 	GameObjectManager::getInstance().onUpdateTime(dt);
-	//设置线框模式
-	Camera::getInstance().startRasterization(m_bShowMesh, m_pd3dDevice, m_pd3dImmediateContext);
 }
 
 void GameApp::DrawScene()
@@ -59,7 +58,7 @@ void GameApp::DrawScene()
 	m_pd3dImmediateContext->ClearDepthStencilView(m_pDepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 	
-	GameObjectManager::getInstance().draw();
+	GameObjectManager::getInstance().draw(m_bShowMesh);
 
 #ifdef USE_IMGUI
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
@@ -72,14 +71,18 @@ void GameApp::InitResource()
 	1、初始化相机
 	2、初始化GameObject
 	*/
-	Camera::getInstance().setTransform(Transform(XMFLOAT3(1.0f, 1.0f, 1.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, -5.0f)));
+	Camera::getInstance().setTransform(Transform(XMFLOAT3(1.0f, 1.0f, 1.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 2.0f, -5.0f)));
 	GameObjectManager::getInstance().init(m_pd3dDevice, m_pd3dImmediateContext);
+
+	//初始化各种渲染状态状态
+	RenderStates::InitAll(m_pd3dDevice.Get());
 }
 
 void GameApp::cameraController(float dt)
 {
 	ImGuiIO& io = ImGui::GetIO();
 
+	//右键按下调整相机姿态
 	static XMFLOAT3 caRot = Camera::getInstance().getRotation();
 	if (ImGui::IsMouseDragging(ImGuiMouseButton_Right))
 	{
@@ -87,6 +90,10 @@ void GameApp::cameraController(float dt)
 		caRot.x += io.MouseDelta.y * dt * 10;
 	}
 	Camera::getInstance().setRotation(caRot);
+
+	//滑动滑轮使得相机往下降或者往上升
+	Camera::getInstance().moveForward(io.MouseWheel);
+
 
 	if (ImGui::IsKeyDown('W'))
 		Camera::getInstance().moveForward(dt * 10);
@@ -100,4 +107,5 @@ void GameApp::cameraController(float dt)
 	XMFLOAT3 adjustedPos;
 	XMStoreFloat3(&adjustedPos, XMVectorClamp(XMLoadFloat3(&Camera::getInstance().getPosition()), XMVectorSet(-8.9f, 0.0f, -8.9f, 0.0f), XMVectorReplicate(8.9f)));
 	Camera::getInstance().setPosition(adjustedPos);
+
 }

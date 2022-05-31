@@ -1,18 +1,10 @@
 #include "GameObject.h"
 #include "Camera.h"
-void GameObject::init(const Mesh& mesh, const wchar_t* texturePath, const Transform& transform, float aspectRatio)
-{
 
-	createBuffer(mesh);
-	createTexture(texturePath);
-	createShader();
-	setTransform(transform);
-	updateWorldViewProjMatrix(aspectRatio);
-	updateLight(PLight);
-}
-
-void GameObject::createBuffer(const Mesh& mesh)
+void GameObject::setMesh(const Mesh& mesh)
 {
+	m_mesh = mesh;
+
 	// VertexBuffer
 	D3D11_BUFFER_DESC vbd;
 	ZeroMemory(&vbd, sizeof(vbd));
@@ -50,7 +42,7 @@ void GameObject::createBuffer(const Mesh& mesh)
 
 }
 
-void GameObject::createShader()
+void GameObject::setShader()
 {
 	ComPtr<ID3DBlob> blob;
 
@@ -78,8 +70,9 @@ void GameObject::createShader()
 
 }
 
-void GameObject::createTexture(const wchar_t* texturePath)
+void GameObject::setTexture(const wchar_t* texturePath)
 {
+	m_texturePath = texturePath;
 	// 初始化木箱纹理
 	HR(CreateDDSTextureFromFile(m_pd3dDevice.Get(), texturePath, nullptr, m_pTexture.GetAddressOf()));
 	// 初始化采样器状态
@@ -97,9 +90,28 @@ void GameObject::createTexture(const wchar_t* texturePath)
 
 }
 
-
-void GameObject::bindToRenderPipeline()
+void GameObject::setMaterial(const Material& material)
 {
+	m_material = material;
+
+	PSConstantBuffer psConstantBuffer;
+	psConstantBuffer.material = material;
+	psConstantBuffer.eyePos = XMFLOAT4(Camera::getInstance().getPosition().x, Camera::getInstance().getPosition().y, Camera::getInstance().getPosition().z, 0.0f);
+
+	// 更新PS常量缓冲区资源
+	D3D11_MAPPED_SUBRESOURCE mappedData;
+	HR(m_pd3dImmediateContext->Map(m_pConstantBuffer[1].Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData));
+	memcpy_s(mappedData.pData, sizeof(PSConstantBuffer), &psConstantBuffer, sizeof(PSConstantBuffer));
+	m_pd3dImmediateContext->Unmap(m_pConstantBuffer[1].Get(), 0);
+}
+
+
+
+
+
+void GameObject::draw()
+{
+	//绑定到渲染管线
 	UINT stride = sizeof(VertexPosNormalTex);	// 跨越字节数
 	UINT offset = 0;						// 起始偏移量
 	m_pd3dImmediateContext->IASetVertexBuffers(0, 1, m_pVertexBuffer.GetAddressOf(), &stride, &offset);
@@ -114,14 +126,9 @@ void GameObject::bindToRenderPipeline()
 
 	m_pd3dImmediateContext->PSSetSamplers(0, 1, m_pSamplerState.GetAddressOf());
 	m_pd3dImmediateContext->PSSetShaderResources(0, 1, m_pTexture.GetAddressOf());
-}
 
-
-void GameObject::draw(UINT indexCount)
-{
-
-	bindToRenderPipeline();
-	m_pd3dImmediateContext->DrawIndexed(indexCount, 0, 0);
+	//绘制
+	m_pd3dImmediateContext->DrawIndexed(m_mesh.indexbuffer.size(), 0, 0);
 }
 
 
@@ -208,12 +215,12 @@ void GameObject::updateLight(LightType lt)
 		break;
 	}
 
-	psConstantBuffer.material.ambient = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
-	psConstantBuffer.material.diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	psConstantBuffer.material.specular = XMFLOAT4(0.5f, 0.5f, 0.5f, 5.0f);
+	psConstantBuffer.material = m_material;
 
 
-	;
+
+
+	
 	psConstantBuffer.eyePos = XMFLOAT4(Camera::getInstance().getPosition().x, Camera::getInstance().getPosition().y, Camera::getInstance().getPosition().z, 0.0f);
 
 	// 更新PS常量缓冲区资源

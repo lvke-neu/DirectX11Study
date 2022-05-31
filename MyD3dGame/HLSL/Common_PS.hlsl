@@ -33,8 +33,12 @@ float4 PS(VertexOut pIn) : SV_Target
 	float4 texColor = g_Tex.Sample(g_SamLinear, pIn.tex);
 	float4 litColor = texColor * (ambient + diffuse) + spec;
 
+	clip(texColor.a - 0.1f);
+
 	litColor.a = g_Material.Diffuse.a;
 
 	//return litColor;
+
+	texColor.a = texColor.a* g_Material.Diffuse.a;
 	return texColor;
 }

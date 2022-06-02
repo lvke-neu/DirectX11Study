@@ -35,7 +35,11 @@ void GameApp::UpdateScene(float dt)
 {
 
 #ifdef USE_IMGUI
+
 	cameraController(dt);
+	wireFenceController(dt);
+	boxController(dt);
+
 	ImGui::Begin("Camera");
 	ImGui::Text("Camera Position\n%.2f %.2f %.2f", Camera::getInstance().getPosition().x, Camera::getInstance().getPosition().y, Camera::getInstance().getPosition().z);
 	ImGui::Text("Rasterization\n");
@@ -45,7 +49,7 @@ void GameApp::UpdateScene(float dt)
 	ImGui::Render();
 #endif
 
-	//不管有没有变换都更新一边
+	//不管有没有变换都更新一遍
 	GameObjectManager::getInstance().onUpdateTime(dt);
 }
 
@@ -107,5 +111,38 @@ void GameApp::cameraController(float dt)
 	XMFLOAT3 adjustedPos;
 	XMStoreFloat3(&adjustedPos, XMVectorClamp(XMLoadFloat3(&Camera::getInstance().getPosition()), XMVectorSet(-8.9f, 0.0f, -8.9f, 0.0f), XMVectorReplicate(8.9f)));
 	Camera::getInstance().setPosition(adjustedPos);
+
+}
+
+void GameApp::wireFenceController(float dt)
+{
+	ImGuiIO& io = ImGui::GetIO();
+	if (ImGui::IsKeyDown(0x26))
+		GameObjectManager::getInstance().getGoVector()[1]->moveForward(dt * 10);
+	if (ImGui::IsKeyDown(0x28))
+		GameObjectManager::getInstance().getGoVector()[1]->moveForward(-dt * 10);
+	if (ImGui::IsKeyDown(0x25))
+		GameObjectManager::getInstance().getGoVector()[1]->moveRight(-dt * 10);
+	if (ImGui::IsKeyDown(0x27))
+		GameObjectManager::getInstance().getGoVector()[1]->moveRight(dt * 10);
+
+	XMFLOAT3 adjustedPos;
+	XMStoreFloat3(&adjustedPos, XMVectorClamp(XMLoadFloat3(&GameObjectManager::getInstance().getGoVector()[1]->getPosition()), XMVectorSet(-8.9f, 0.0f, -8.9f, 0.0f), XMVectorReplicate(8.9f)));
+	GameObjectManager::getInstance().getGoVector()[1]->setPosition(adjustedPos);
+
+}
+void GameApp::boxController(float dt)
+{
+	static float rotx = 0;
+	static float roty = 0;
+
+	rotx += dt;
+	roty += dt;
+
+	XMFLOAT3 boxRot = GameObjectManager::getInstance().getGoVector()[0]->getRotation();
+	boxRot.x = rotx;
+	boxRot.y = roty;
+
+	GameObjectManager::getInstance().getGoVector()[0]->setRotation(boxRot);
 
 }

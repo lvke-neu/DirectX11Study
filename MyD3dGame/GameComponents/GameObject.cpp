@@ -28,17 +28,6 @@ void GameObject::setMesh(const Mesh& mesh)
 	HR(m_pd3dDevice->CreateBuffer(&ibd, &InitData, m_pIndexBuffer.GetAddressOf()));
 
 
-	//VSConstantBuffer
-	D3D11_BUFFER_DESC cbd;
-	ZeroMemory(&cbd, sizeof(cbd));
-	cbd.Usage = D3D11_USAGE_DYNAMIC;
-	cbd.ByteWidth = sizeof(VSConstantBuffer);
-	cbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	cbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	HR(m_pd3dDevice->CreateBuffer(&cbd, nullptr, m_pConstantBuffer[0].GetAddressOf()));
-	cbd.ByteWidth = sizeof(PSConstantBuffer);
-	HR(m_pd3dDevice->CreateBuffer(&cbd, nullptr, m_pConstantBuffer[1].GetAddressOf()));
-
 
 }
 
@@ -94,6 +83,19 @@ void GameObject::setMaterial(const Material& material)
 {
 	m_material = material;
 
+
+	//VSConstantBuffer
+	D3D11_BUFFER_DESC cbd;
+	ZeroMemory(&cbd, sizeof(cbd));
+	cbd.Usage = D3D11_USAGE_DYNAMIC;
+	cbd.ByteWidth = sizeof(VSConstantBuffer);
+	cbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	cbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	HR(m_pd3dDevice->CreateBuffer(&cbd, nullptr, m_pConstantBuffer[0].GetAddressOf()));
+	cbd.ByteWidth = sizeof(PSConstantBuffer);
+	HR(m_pd3dDevice->CreateBuffer(&cbd, nullptr, m_pConstantBuffer[1].GetAddressOf()));
+
+
 	PSConstantBuffer psConstantBuffer;
 	psConstantBuffer.material = material;
 	psConstantBuffer.eyePos = XMFLOAT4(Camera::getInstance().getPosition().x, Camera::getInstance().getPosition().y, Camera::getInstance().getPosition().z, 0.0f);
@@ -134,7 +136,7 @@ void GameObject::draw()
 
 
 
-void GameObject::updateWorldViewProjMatrix(float AspectRatio)
+void GameObject::updateWorldViewProjMatrix(float AspectRatio, bool bReflection)
 {
 	VSConstantBuffer vsConstantBuffer;
 	vsConstantBuffer.world = XMMatrixTranspose(m_transform.getWorldMatrix());
@@ -143,12 +145,47 @@ void GameObject::updateWorldViewProjMatrix(float AspectRatio)
 	DirectX::XMMATRIX A = m_transform.getWorldMatrix();
 	A.r[3] = g_XMIdentityR3;
 	vsConstantBuffer.worldInvTranspose = XMMatrixTranspose(XMMatrixTranspose(XMMatrixInverse(nullptr, A)));
+	vsConstantBuffer.isReflection = bReflection;
+	vsConstantBuffer.reflection = XMMatrixTranspose(XMMatrixReflect(XMVectorSet(0.0f, 0.0f, -1.0f, 10.0f)));
 
 	D3D11_MAPPED_SUBRESOURCE mappedData;
 	HR(m_pd3dImmediateContext->Map(m_pConstantBuffer[0].Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData));
 	memcpy_s(mappedData.pData, sizeof(vsConstantBuffer), &vsConstantBuffer, sizeof(vsConstantBuffer));
 	m_pd3dImmediateContext->Unmap(m_pConstantBuffer[0].Get(), 0);
 }
+
+
+
+void GameObject::moveForward(float dis)
+{
+
+	XMVECTOR dir = XMVector3Normalize(XMLoadFloat3(&m_transform.getForwarDir()));
+
+	XMVECTOR pos;
+	pos = XMLoadFloat3(&m_transform.getPosition());
+
+	XMFLOAT3 newPos;
+	XMStoreFloat3(&newPos, pos + dir * dis);
+
+	m_transform.setPosition(newPos);
+}
+
+void GameObject::moveRight(float dis)
+{
+
+	XMVECTOR dir = XMVector3Normalize(XMLoadFloat3(&m_transform.getRightDir()));
+
+	XMVECTOR pos;
+	pos = XMLoadFloat3(&m_transform.getPosition());
+
+	XMFLOAT3 newPos;
+	XMStoreFloat3(&newPos, pos + dir * dis);
+
+	m_transform.setPosition(newPos);
+}
+
+
+
 
 void GameObject::updateLight(LightType lt)
 {
@@ -229,3 +266,4 @@ void GameObject::updateLight(LightType lt)
 	memcpy_s(mappedData.pData, sizeof(PSConstantBuffer), &psConstantBuffer, sizeof(PSConstantBuffer));
 	m_pd3dImmediateContext->Unmap(m_pConstantBuffer[1].Get(), 0);
 }
+

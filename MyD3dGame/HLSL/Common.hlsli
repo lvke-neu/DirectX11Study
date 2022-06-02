@@ -2,10 +2,14 @@
 
 cbuffer VSConstantBuffer : register(b0)
 {
-	matrix g_World; // matrix¿ÉÒÔÓÃfloat4x4Ìæ´ú¡£²»¼Órow_majorµÄÇé¿öÏÂ£¬¾ØÕóÄ¬ÈÏÎªÁĞÖ÷¾ØÕó£¬
-	matrix g_View;  // ¿ÉÒÔÔÚÇ°ÃæÌí¼Órow_major±íÊ¾ĞĞÖ÷¾ØÕó
-	matrix g_Proj;  // ¸Ã½Ì³ÌÍùºó½«Ê¹ÓÃÄ¬ÈÏµÄÁĞÖ÷¾ØÕó£¬µ«ĞèÒªÔÚC++´úÂë¶ËÔ¤ÏÈ½«¾ØÕó½øĞĞ×ªÖÃ¡£
+	matrix g_World; // matrixå¯ä»¥ç”¨float4x4æ›¿ä»£ã€‚ä¸åŠ row_majorçš„æƒ…å†µä¸‹ï¼ŒçŸ©é˜µé»˜è®¤ä¸ºåˆ—ä¸»çŸ©é˜µï¼Œ
+	matrix g_View;  // å¯ä»¥åœ¨å‰é¢æ·»åŠ row_majorè¡¨ç¤ºè¡Œä¸»çŸ©é˜µ
+	matrix g_Proj;  // è¯¥æ•™ç¨‹å¾€åå°†ä½¿ç”¨é»˜è®¤çš„åˆ—ä¸»çŸ©é˜µï¼Œä½†éœ€è¦åœ¨C++ä»£ç ç«¯é¢„å…ˆå°†çŸ©é˜µè¿›è¡Œè½¬ç½®ã€‚
 	matrix g_WorldInvTranspose;
+
+	int g_IsReflection;
+	float3 g_Pad1;
+	matrix g_Reflection;
 }
 
 cbuffer PSConstantBuffer : register(b1)
@@ -20,15 +24,15 @@ cbuffer PSConstantBuffer : register(b1)
 
 struct VertexIn
 {
-	float3 posL : POSITION; //¾Ö²¿×ø±êÏÂÎ»ÖÃ
-	float3 normalL: NORMAL; //¾Ö²¿×ø±êÏÂ·¨Ïß
+	float3 posL : POSITION; //å±€éƒ¨åæ ‡ä¸‹ä½ç½®
+	float3 normalL: NORMAL; //å±€éƒ¨åæ ‡ä¸‹æ³•çº¿
 	float2 tex : TEXCOORD;
 };
 
 struct VertexOut
 {
-	float4 posH : SV_POSITION;//Æë´Î×ø±êÏÂÎ»ÖÃ
-	float3 posW : POSITION; //ÊÀ½ç×ø±êÏÂÎ»ÖÃ
-	float3 normalW: NORMAL; //ÊÀ½ç×ø±êÏÂµÄ·¢ÏÖ
+	float4 posH : SV_POSITION;//é½æ¬¡åæ ‡ä¸‹ä½ç½®
+	float3 posW : POSITION; //ä¸–ç•Œåæ ‡ä¸‹ä½ç½®
+	float3 normalW: NORMAL; //ä¸–ç•Œåæ ‡ä¸‹çš„æ³•çº¿
 	float2 tex : TEXCOORD;
 };

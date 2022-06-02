@@ -10,13 +10,16 @@ template <class T>
 using ComPtr = Microsoft::WRL::ComPtr<T>;
 class Camera
 {
-public:
+
+private:
 	Camera()
 	{
 		m_transform.setScale(XMFLOAT3(1.0f, 1.0f, 1.0f));
 		m_transform.setRotation(XMFLOAT3(1.0f, 1.0f, 1.0f));
 		m_transform.setPosition(XMFLOAT3(0.0f, 0.0f, 0.0f));
 	}
+public:
+	
 
 	Transform getTransform() 
 	{ 

@@ -20,6 +20,10 @@ public:
 		XMMATRIX view;
 		XMMATRIX proj;
 		XMMATRIX worldInvTranspose;
+
+		int isReflection;
+		DirectX::XMFLOAT3 pad;
+		XMMATRIX reflection;
 	};
 
 	struct PSConstantBuffer
@@ -39,20 +43,21 @@ public:
 	void setShader();
 	void setTexture( const wchar_t* texturePath);
 	void setMaterial(const Material& material);
-	void updateWorldViewProjMatrix(float AspectRatio);
+	void updateWorldViewProjMatrix(float AspectRatio, bool bReflection);
 	void draw();
 	void updateLight(LightType lt);
 	
 
 	void setTransform(const Transform& transform){ m_transform = transform; }
 	Transform getTransform(){ return m_transform; }
-
 	inline XMFLOAT3 getScale() { return m_transform.getScale(); }
 	void setScale(const XMFLOAT3& scale) { m_transform.setScale(scale); }
 	inline XMFLOAT3 getRotation() { return m_transform.getRotation(); }
 	void setRotation(const XMFLOAT3& rotation) { m_transform.setRotation(rotation); }
 	inline XMFLOAT3 getPosition() { return m_transform.getPosition(); }
 	void setPosition(const XMFLOAT3& position) { m_transform.setPosition(position); }
+	void moveForward(float dis);
+	void moveRight(float dis);
 
 private:
 	ComPtr<ID3D11Buffer> m_pVertexBuffer;		// 顶点缓冲区

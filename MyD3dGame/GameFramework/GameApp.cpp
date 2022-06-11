@@ -87,7 +87,6 @@ void GameApp::InitResource()
 	Camera::getInstance().updateProjMatrix();
 
 	//GameObjectResource初始化，GameObject初始化
-	GameObjectResource::init(m_pd3dDevice, m_pd3dImmediateContext);
 	GameObjectManager::getInstance().init(m_pd3dDevice, m_pd3dImmediateContext);	
 }
 

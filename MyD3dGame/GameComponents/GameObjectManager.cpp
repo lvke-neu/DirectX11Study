@@ -8,6 +8,8 @@ GameObjectManager GameObjectManager::gameObjectManager;
 
 void GameObjectManager::init(ComPtr<ID3D11Device> pd3dDevice, ComPtr<ID3D11DeviceContext> pd3dImmediateContext)
 {
+	GameObjectResource::init(pd3dDevice, pd3dImmediateContext);
+
 	m_pd3dDevice = pd3dDevice;
 	m_pd3dImmediateContext = pd3dImmediateContext;
 

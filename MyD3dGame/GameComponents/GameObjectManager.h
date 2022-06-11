@@ -17,6 +17,14 @@ public:
 		return gameObjectManager;
 	}
 	std::vector<GameObject*> getGoVector() { return m_goVector; };
+
+	enum Reflection
+	{
+		WithTransparent,
+		WithoutTransparent
+	};
+
+	void drawMirror(Reflection reflection, bool bShowMesh);//绘制镜面反射，反射的物体都不是透明、反射的物体有透明的
 private:
 	std::vector<GameObject*> m_goVector;
 	float m_aspectRatio;

@@ -1,26 +1,47 @@
 #include "LightHelper.hlsli"
 
-cbuffer VSConstantBuffer : register(b0)
+cbuffer GoConstantBuffer : register(b0)
 {
 	matrix g_World; // matrix可以用float4x4替代。不加row_major的情况下，矩阵默认为列主矩阵，
-	matrix g_View;  // 可以在前面添加row_major表示行主矩阵
-	matrix g_Proj;  // 该教程往后将使用默认的列主矩阵，但需要在C++代码端预先将矩阵进行转置。
 	matrix g_WorldInvTranspose;
-
-	int g_IsReflection;
-	float3 g_Pad1;
-	matrix g_Reflection;
+	Material g_Material;
 }
 
-cbuffer PSConstantBuffer : register(b1)
+cbuffer ViewTransform : register(b1)
+{
+	matrix g_View;
+}
+
+cbuffer ProjTransform : register(b2)
+{
+	matrix g_Proj;
+}
+
+
+
+
+
+cbuffer LightConstantBuffer : register(b3)
 {
 	DirectionalLight g_DirLight;
 	PointLight g_PointLight;
 	SpotLight g_SpotLight;
-	Material g_Material;
 	float3 g_EyePosW;
 	float g_Pad;
 }
+
+cbuffer RefectionConstantBuffer : register(b4)
+{
+	int g_IsReflection;
+	float3 g_Pad1;
+	matrix g_Reflection;
+	int g_IsShadow;
+	float3 g_Pad2;
+	matrix g_Shadow;
+	matrix g_RefShadow;
+
+}
+
 
 struct VertexIn
 {

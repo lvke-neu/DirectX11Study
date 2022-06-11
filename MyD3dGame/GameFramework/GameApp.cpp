@@ -1,8 +1,5 @@
 #include "GameApp.h"
-#include "d3dUtil.h"
-#include "DXTrace.h"
 #include "../GameComponents/Camera.h"
-#include "RenderStates.h"
 GameApp::GameApp(HINSTANCE hInstance)
 	: D3DApp(hInstance)
 {
@@ -28,7 +25,12 @@ void GameApp::OnResize()
 {
 	D3DApp::OnResize();
 
-	GameObjectManager::getInstance().setAspectRatio(AspectRatio());
+	if (!Camera::getInstance().isDeviceContextEmpty())
+	{
+		Camera::getInstance().setFrustum(XM_PI / 3, AspectRatio(), 0.5f, 1000.0f);
+		Camera::getInstance().updateProjMatrix();
+	}
+		
 }
 
 void GameApp::UpdateScene(float dt)
@@ -49,8 +51,8 @@ void GameApp::UpdateScene(float dt)
 	ImGui::Render();
 #endif
 
-	//不管有没有变换都更新一遍
-	GameObjectManager::getInstance().onUpdateTime(dt);
+	//更新视图矩阵
+	Camera::getInstance().updateViewMatrix();
 }
 
 void GameApp::DrawScene()
@@ -71,15 +73,22 @@ void GameApp::DrawScene()
 }
 
 void GameApp::InitResource()
-{	/*
-	1、初始化相机
-	2、初始化GameObject
-	*/
-	Camera::getInstance().setTransform(Transform(XMFLOAT3(1.0f, 1.0f, 1.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 2.0f, -5.0f)));
-	GameObjectManager::getInstance().init(m_pd3dDevice, m_pd3dImmediateContext);
-
-	//初始化各种渲染状态状态
+{	
+	//初始化所有的渲染状态
 	RenderStates::InitAll(m_pd3dDevice.Get());
+
+	//设置采样方式
+	m_pd3dImmediateContext->PSSetSamplers(0, 1, RenderStates::SSLinearWrap.GetAddressOf());
+
+	//相机初始化，设置视锥体，设置位置，更新投影矩阵
+	Camera::getInstance().init(m_pd3dDevice, m_pd3dImmediateContext);
+	Camera::getInstance().setFrustum(XM_PI / 3, AspectRatio(), 0.5f, 1000.0f);
+	Camera::getInstance().setPosition(XMFLOAT3(0.0f, 2.0f, -5.0f));
+	Camera::getInstance().updateProjMatrix();
+
+	//GameObjectResource初始化，GameObject初始化
+	GameObjectResource::init(m_pd3dDevice, m_pd3dImmediateContext);
+	GameObjectManager::getInstance().init(m_pd3dDevice, m_pd3dImmediateContext);	
 }
 
 void GameApp::cameraController(float dt)
@@ -133,16 +142,45 @@ void GameApp::wireFenceController(float dt)
 }
 void GameApp::boxController(float dt)
 {
-	static float rotx = 0;
-	static float roty = 0;
+	//static float rotx = 0;
+	//static float roty = 0;
 
-	rotx += dt;
-	roty += dt;
+	//rotx += dt;
+	//roty += dt;
 
-	XMFLOAT3 boxRot = GameObjectManager::getInstance().getGoVector()[0]->getRotation();
-	boxRot.x = rotx;
-	boxRot.y = roty;
+	//XMFLOAT3 boxRot = GameObjectManager::getInstance().getGoVector()[0]->getRotation();
+	//boxRot.x = rotx;
+	//boxRot.y = roty;
 
-	GameObjectManager::getInstance().getGoVector()[0]->setRotation(boxRot);
+	//GameObjectManager::getInstance().getGoVector()[0]->setRotation(boxRot);
+	ImGuiIO& io = ImGui::GetIO();
+	bool flag = false;
+	if (ImGui::IsKeyDown(0x26))
+	{
+		GameObjectManager::getInstance().getGoVector()[0]->moveForward(dt * 10);
+	}
+		
+	if (ImGui::IsKeyDown(0x28))
+	{
+		GameObjectManager::getInstance().getGoVector()[0]->moveForward(-dt * 10);
+	}
+		
+	if (ImGui::IsKeyDown(0x25))
+	{
+		GameObjectManager::getInstance().getGoVector()[0]->moveRight(-dt * 10);
+	}
+		
+	if (ImGui::IsKeyDown(0x27))
+	{
+		GameObjectManager::getInstance().getGoVector()[0]->moveRight(dt * 10);
+	}
+		
+	
+XMFLOAT3 adjustedPos;
+		XMStoreFloat3(&adjustedPos, XMVectorClamp(XMLoadFloat3(&GameObjectManager::getInstance().getGoVector()[0]->getPosition()), XMVectorSet(-8.9f, -1.0f, -8.9f, 0.0f), XMVectorReplicate(8.9f)));
+		GameObjectManager::getInstance().getGoVector()[0]->setPosition(adjustedPos);
+	
+
+
 
 }

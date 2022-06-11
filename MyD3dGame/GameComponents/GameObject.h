@@ -1,11 +1,6 @@
 #pragma once
-
-#include <wrl/client.h>
-#include "../GameFramework/DXTrace.h"
-#include "../GameFramework/d3dUtil.h"
 #include "Transform.h"
-#include "Geometry.h"
-#include "LightHelper.h"
+#include "GameObjectResource.h"
 
 
 
@@ -13,27 +8,6 @@ template <class T>
 using ComPtr = Microsoft::WRL::ComPtr<T>;
 class GameObject
 {
-public:
-	struct  VSConstantBuffer
-	{
-		XMMATRIX world;
-		XMMATRIX view;
-		XMMATRIX proj;
-		XMMATRIX worldInvTranspose;
-
-		int isReflection;
-		DirectX::XMFLOAT3 pad;
-		XMMATRIX reflection;
-	};
-
-	struct PSConstantBuffer
-	{
-		DirectionalLight dirLight;
-		PointLight pointLight;
-		SpotLight spotLight;
-		Material material;
-		DirectX::XMFLOAT4 eyePos;
-	};
 
 public:
 	GameObject(ComPtr<ID3D11Device> pd3dDevice, ComPtr<ID3D11DeviceContext> pd3dImmediateContext) :
@@ -43,9 +17,9 @@ public:
 	void setShader();
 	void setTexture( const wchar_t* texturePath);
 	void setMaterial(const Material& material);
-	void updateWorldViewProjMatrix(float AspectRatio, bool bReflection);
 	void draw();
-	void updateLight(LightType lt);
+	void moveForward(float dis);
+	void moveRight(float dis);
 	
 
 	void setTransform(const Transform& transform){ m_transform = transform; }
@@ -56,20 +30,20 @@ public:
 	void setRotation(const XMFLOAT3& rotation) { m_transform.setRotation(rotation); }
 	inline XMFLOAT3 getPosition() { return m_transform.getPosition(); }
 	void setPosition(const XMFLOAT3& position) { m_transform.setPosition(position); }
-	void moveForward(float dis);
-	void moveRight(float dis);
+
 
 private:
 	ComPtr<ID3D11Buffer> m_pVertexBuffer;		// 顶点缓冲区
 	ComPtr<ID3D11Buffer> m_pIndexBuffer;		// 索引缓冲区
-	ComPtr<ID3D11Buffer> m_pConstantBuffer[2];		// 常量缓冲区
 
-	ComPtr<ID3D11InputLayout> m_pVertexLayout;	// 顶点输入布局
+
+	
 	ComPtr<ID3D11VertexShader> m_pVertexShader;	// 顶点着色器
+	ComPtr<ID3D11InputLayout> m_pVertexLayout;	// 顶点输入布局
 	ComPtr<ID3D11PixelShader> m_pPixelShader;	// 像素着色器
 
-	ComPtr<ID3D11ShaderResourceView> m_pTexture;			    // 木盒纹理
-	ComPtr<ID3D11SamplerState> m_pSamplerState;				    // 采样器状态
+	ComPtr<ID3D11ShaderResourceView> m_pTexture;			    // 纹理
+
 
 	ComPtr<ID3D11Device> m_pd3dDevice;
 	ComPtr<ID3D11DeviceContext> m_pd3dImmediateContext;

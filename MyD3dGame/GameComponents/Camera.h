@@ -4,7 +4,7 @@
 #include <wrl/client.h>
 #include "../GameFramework/d3dUtil.h"
 #include "../GameFramework/DXTrace.h"
-
+#include "LightHelper.h"
 
 template <class T>
 using ComPtr = Microsoft::WRL::ComPtr<T>;
@@ -15,7 +15,7 @@ private:
 	Camera()
 	{
 		m_transform.setScale(XMFLOAT3(1.0f, 1.0f, 1.0f));
-		m_transform.setRotation(XMFLOAT3(1.0f, 1.0f, 1.0f));
+		m_transform.setRotation(XMFLOAT3(0.0f, 0.0f, 0.0f));
 		m_transform.setPosition(XMFLOAT3(0.0f, 0.0f, 0.0f));
 	}
 public:
@@ -86,12 +86,52 @@ public:
 	{
 		return camera;
 	}
+
+
+//视图矩阵、投影矩阵
+public:
+	struct  CBView
+	{
+		XMMATRIX view;
+	};
+	struct  CBProj
+	{
+		XMMATRIX proj;
+	};
+
+	struct LightConstantBuffer
+	{
+		DirectionalLight DirLight;
+		PointLight PointLight;
+		SpotLight SpotLight;
+		//Material g_Material;
+		XMFLOAT3 g_EyePosW;
+		float g_Pad;
+	};
+
+	void init(ComPtr<ID3D11Device> pd3dDevice, ComPtr<ID3D11DeviceContext> pd3dImmediateContext);
+	void setFrustum(float FovAngleY, float AspectRatio, float NearZ, float FarZ) { m_FovAngleY = FovAngleY, m_AspectRatio = AspectRatio, m_NearZ= NearZ, m_FarZ = FarZ; }
+	bool isDeviceContextEmpty() { return m_pd3dDevice == nullptr || m_pd3dImmediateContext == nullptr ? 1 : 0; }
+	
+	void updateViewMatrix();
+	void updateProjMatrix();
+
 private:
 	Transform m_transform;
 	static Camera camera;
 
+	ComPtr<ID3D11Device> m_pd3dDevice;
+	ComPtr<ID3D11DeviceContext> m_pd3dImmediateContext;
+	ComPtr<ID3D11Buffer> m_pViewBuffer;
+	ComPtr<ID3D11Buffer> m_pProjBuffer;
+	ComPtr<ID3D11Buffer> m_pLightConstantBuffer;
 
-	ComPtr<ID3D11RasterizerState> m_pRasterizerState = nullptr;	// 光栅化状态: 线框模式
+	float m_FovAngleY;
+	float m_AspectRatio;
+	float m_NearZ;
+	float m_FarZ;
+
+	//ComPtr<ID3D11RasterizerState> m_pRasterizerState = nullptr;	// 光栅化状态: 线框模式
 };
 
 

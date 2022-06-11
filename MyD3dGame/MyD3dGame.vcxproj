@@ -20,9 +20,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameComponents\Camera.cpp" />
+    <ClCompile Include="GameComponents\GameObjectResource.cpp" />
     <ClCompile Include="GameComponents\GameObject.cpp" />
     <ClCompile Include="GameComponents\GameObjectManager.cpp" />
     <ClCompile Include="GameComponents\Geometry.cpp" />
+    <ClCompile Include="GameComponents\RenderStates.cpp" />
     <ClCompile Include="GameComponents\Transform.cpp" />
     <ClCompile Include="GameFramework\d3dApp.cpp" />
     <ClCompile Include="GameFramework\d3dUtil.cpp" />
@@ -33,14 +35,15 @@
     <ClCompile Include="GameFramework\Keyboard.cpp" />
     <ClCompile Include="GameFramework\Main.cpp" />
     <ClCompile Include="GameFramework\Mouse.cpp" />
-    <ClCompile Include="GameFramework\RenderStates.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameComponents\Camera.h" />
+    <ClInclude Include="GameComponents\GameObjectResource.h" />
     <ClInclude Include="GameComponents\GameObject.h" />
     <ClInclude Include="GameComponents\GameObjectManager.h" />
     <ClInclude Include="GameComponents\Geometry.h" />
     <ClInclude Include="GameComponents\LightHelper.h" />
+    <ClInclude Include="GameComponents\RenderStates.h" />
     <ClInclude Include="GameComponents\Transform.h" />
     <ClInclude Include="GameFramework\d3dApp.h" />
     <ClInclude Include="GameFramework\d3dUtil.h" />
@@ -50,7 +53,6 @@
     <ClInclude Include="GameFramework\GameTimer.h" />
     <ClInclude Include="GameFramework\Keyboard.h" />
     <ClInclude Include="GameFramework\Mouse.h" />
-    <ClInclude Include="GameFramework\RenderStates.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="HLSL\Common.hlsli" />

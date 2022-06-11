@@ -1,7 +1,6 @@
 #pragma once
 
 #include "d3dApp.h"
-
 #include "../GameComponents/GameObjectManager.h"
 
 

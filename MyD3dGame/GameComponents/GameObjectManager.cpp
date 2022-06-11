@@ -1,5 +1,8 @@
 #include "GameObjectManager.h"
-#include "../GameFramework/RenderStates.h"
+
+
+
+
 GameObjectManager GameObjectManager::gameObjectManager;
 
 
@@ -8,7 +11,7 @@ void GameObjectManager::init(ComPtr<ID3D11Device> pd3dDevice, ComPtr<ID3D11Devic
 	m_pd3dDevice = pd3dDevice;
 	m_pd3dImmediateContext = pd3dImmediateContext;
 
-	Material material; 
+	Material material;
 	material.ambient = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
 	material.diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	material.specular = XMFLOAT4(0.2f, 0.2f, 0.2f, 16.0f);
@@ -19,7 +22,7 @@ void GameObjectManager::init(ComPtr<ID3D11Device> pd3dDevice, ComPtr<ID3D11Devic
 	m_box->setShader();
 	m_box->setTexture(L"Texture\\WoodCrate.dds");
 	m_box->setMaterial(material);
-	m_box->setTransform(Transform(XMFLOAT3(1.0f, 1.0f, 1.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(3.0f, 2.0f, 0.0f)));
+	m_box->setTransform(Transform(XMFLOAT3(1.0f, 1.0f, 1.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(0.0f,-0.5f, 0.0f)));
 	m_goVector.push_back(m_box);
 
 
@@ -94,107 +97,13 @@ void GameObjectManager::init(ComPtr<ID3D11Device> pd3dDevice, ComPtr<ID3D11Devic
 
 void GameObjectManager::onUpdateTime(float dt)
 {
-	for (auto go : m_goVector)
-	{
-		if (go)
-		{
-			go->updateWorldViewProjMatrix(m_aspectRatio, 0);
-		}
-	}
+
 }
 
 void GameObjectManager::draw(bool bShowMesh)
 {
-	////绘制不透明对象
-	//m_pd3dImmediateContext->RSSetState(nullptr);
-	//m_pd3dImmediateContext->OMSetBlendState(nullptr, nullptr, 0xFFFFFFFF);
-	//if (bShowMesh)
-	//	m_pd3dImmediateContext->RSSetState(RenderStates::RSWireframe.Get());
 
-
-	//m_mirror->draw();
-	//m_box->draw();
-	//for (auto around : m_around)
-	//{
-	//	around->draw();
-	//}
-	//m_ground->draw();
-
-
-	////绘制透明对象
-	//m_pd3dImmediateContext->RSSetState(RenderStates::RSNoCull.Get());
-	//m_pd3dImmediateContext->OMSetBlendState(RenderStates::BSTransparent.Get(), nullptr, 0xFFFFFFFF);
-	//if (bShowMesh)
-	//	m_pd3dImmediateContext->RSSetState(RenderStates::RSWireframe.Get());
-
-
-	//m_wireFence->setPosition(XMFLOAT3(2.0f, 1.0f, 0.0f));
-	//m_wireFence->updateWorldViewProjMatrix(m_aspectRatio);
-	//m_wireFence->draw();
-
-	//m_wireFence->setPosition(XMFLOAT3(-2.0f, 1.0f, 0.0f));
-	//m_wireFence->updateWorldViewProjMatrix(m_aspectRatio);
-	//m_wireFence->draw();
-
-	//m_water->draw();
-
-
-
-	// 1. 给镜面反射区域写入值1到模板缓冲区
-	m_pd3dImmediateContext->RSSetState(nullptr);
-	m_pd3dImmediateContext->OMSetDepthStencilState(RenderStates::DSSWriteStencil.Get(), 1);
-	m_pd3dImmediateContext->OMSetBlendState(RenderStates::BSNoColorWrite.Get(), nullptr, 0xFFFFFFFF);
-	m_mirror->draw();
-
-	// 2. 绘制不透明的反射物体
-	m_box->updateWorldViewProjMatrix(m_aspectRatio, 1);
-	m_around[2]->updateWorldViewProjMatrix(m_aspectRatio, 1);
-	m_around[3]->updateWorldViewProjMatrix(m_aspectRatio, 1);
-	m_around[4]->updateWorldViewProjMatrix(m_aspectRatio, 1);
-	m_ground->updateWorldViewProjMatrix(m_aspectRatio, 1);
-	m_pd3dImmediateContext->RSSetState(RenderStates::RSCullClockWise.Get());
-	m_pd3dImmediateContext->OMSetDepthStencilState(RenderStates::DSSDrawWithStencil.Get(), 1);
-	m_pd3dImmediateContext->OMSetBlendState(nullptr, nullptr, 0xFFFFFFFF);
-	m_box->draw();
-	m_around[2]->draw();
-	m_around[3]->draw();
-	m_around[4]->draw();
-	m_ground->draw();
-
-	//3. 绘制透明的反射物体
-	m_wireFence->updateWorldViewProjMatrix(m_aspectRatio, 1);
-	m_water->updateWorldViewProjMatrix(m_aspectRatio, 1);
-	m_mirror->updateWorldViewProjMatrix(m_aspectRatio, 1);
-	m_pd3dImmediateContext->RSSetState(RenderStates::RSNoCull.Get());
-	m_pd3dImmediateContext->OMSetDepthStencilState(RenderStates::DSSDrawWithStencil.Get(), 1);
-	m_pd3dImmediateContext->OMSetBlendState(RenderStates::BSTransparent.Get(), nullptr, 0xFFFFFFFF);
-	m_wireFence->draw();
-	m_water->draw();
-	m_mirror->draw();
-
-	//4. 绘制不透明的正常物体
-	m_box->updateWorldViewProjMatrix(m_aspectRatio, 0);
-	m_around[2]->updateWorldViewProjMatrix(m_aspectRatio, 0);
-	m_around[3]->updateWorldViewProjMatrix(m_aspectRatio, 0);
-	m_around[4]->updateWorldViewProjMatrix(m_aspectRatio, 0);
-	m_ground->updateWorldViewProjMatrix(m_aspectRatio, 0);
-	m_wireFence->updateWorldViewProjMatrix(m_aspectRatio, 0);
-	m_water->updateWorldViewProjMatrix(m_aspectRatio, 0);
-	m_mirror->updateWorldViewProjMatrix(m_aspectRatio, 0);
-	m_pd3dImmediateContext->RSSetState(nullptr);
-	m_pd3dImmediateContext->OMSetDepthStencilState(nullptr, 0);
-	m_pd3dImmediateContext->OMSetBlendState(nullptr, nullptr, 0xFFFFFFFF);
-	m_box->draw();
-	for (auto& wall : m_around)
-		wall->draw();
-	m_ground->draw();
-
-	//5. 绘制透明的正常物体
-	m_pd3dImmediateContext->RSSetState(RenderStates::RSNoCull.Get());
-	m_pd3dImmediateContext->OMSetDepthStencilState(nullptr, 0);
-	m_pd3dImmediateContext->OMSetBlendState(RenderStates::BSTransparent.Get(), nullptr, 0xFFFFFFFF);
-	m_wireFence->draw();
-	m_water->draw();
+	drawMirror(WithoutTransparent, bShowMesh);
 }
 
 
@@ -214,3 +123,118 @@ GameObjectManager::~GameObjectManager()
 	}
 }
 
+
+void GameObjectManager::drawMirror(Reflection reflection, bool bShowMesh)
+{
+	switch (reflection)
+	{
+	case GameObjectManager::WithTransparent:
+	{
+		//// 1. 给镜面反射区域写入值1到模板缓冲区
+		//m_pd3dImmediateContext->RSSetState(nullptr);
+		//m_pd3dImmediateContext->OMSetDepthStencilState(RenderStates::DSSWriteStencil.Get(), 1);
+		//m_pd3dImmediateContext->OMSetBlendState(RenderStates::BSNoColorWrite.Get(), nullptr, 0xFFFFFFFF);
+		//m_mirror->draw();
+
+		//// 2. 绘制不透明的反射物体
+		//GameObjectResource::setIsReflection(true);
+		//m_pd3dImmediateContext->RSSetState(RenderStates::RSCullClockWise.Get());
+		//m_pd3dImmediateContext->OMSetDepthStencilState(RenderStates::DSSDrawWithStencil.Get(), 1);
+		//m_pd3dImmediateContext->OMSetBlendState(nullptr, nullptr, 0xFFFFFFFF);
+		//m_box->draw();
+		//m_around[2]->draw();
+		//m_around[3]->draw();
+		//m_around[4]->draw();
+		//m_ground->draw();
+
+		////3. 绘制透明的反射物体
+		//m_pd3dImmediateContext->RSSetState(RenderStates::RSNoCull.Get());
+		//m_pd3dImmediateContext->OMSetDepthStencilState(RenderStates::DSSDrawWithStencil.Get(), 1);
+		//m_pd3dImmediateContext->OMSetBlendState(RenderStates::BSTransparent.Get(), nullptr, 0xFFFFFFFF);
+		//m_wireFence->draw();
+		//m_water->draw();
+		//m_mirror->draw();
+
+		////4. 绘制不透明的正常物体
+		//GameObjectResource::setIsReflection(false);
+		//m_pd3dImmediateContext->RSSetState(nullptr);
+		//m_pd3dImmediateContext->OMSetDepthStencilState(nullptr, 0);
+		//m_pd3dImmediateContext->OMSetBlendState(nullptr, nullptr, 0xFFFFFFFF);
+		//m_box->draw();
+		//for (auto& wall : m_around)
+		//	wall->draw();
+		//m_ground->draw();
+
+		////5. 绘制透明的正常物体
+		//m_pd3dImmediateContext->RSSetState(RenderStates::RSNoCull.Get());
+		//m_pd3dImmediateContext->OMSetDepthStencilState(nullptr, 0);
+		//m_pd3dImmediateContext->OMSetBlendState(RenderStates::BSTransparent.Get(), nullptr, 0xFFFFFFFF);
+		//m_wireFence->draw();
+		//m_water->draw();
+	}
+		break;
+	case GameObjectManager::WithoutTransparent:
+	{
+		
+		// 1. 给镜面反射区域写入值1到模板缓冲区
+		GameObjectResource::SetWriteStencilOnly(1, bShowMesh);
+		m_mirror->draw();
+
+		// 2. 绘制镜子里的物体
+		GameObjectResource::setIsReflectionAndIsShadow(true, false);
+		GameObjectResource::SetRenderDefaultWithStencil(1, bShowMesh);
+		m_around[2]->draw();
+		m_around[3]->draw();
+		m_around[4]->draw();
+		m_ground->draw();
+		m_box->draw();
+
+		//3、 绘制镜子里的物体的阴影
+		GameObjectResource::setIsReflectionAndIsShadow(true, true);
+		GameObjectResource::SetRenderNoDoubleBlend(1, bShowMesh);
+		Material material;
+		material.ambient = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
+		material.diffuse = XMFLOAT4(0.0f, 0.0f, 0.0f, 0.5f);
+		material.specular = XMFLOAT4(0.0f, 0.0f, 0.0f, 16.0f);
+		m_box->setMaterial(material);
+		m_box->draw();
+
+
+		//4、 绘制镜子
+		GameObjectResource::setIsReflectionAndIsShadow(false, false);
+		GameObjectResource::SetRenderAlphaBlendWithStencil(1, bShowMesh);
+		m_mirror->draw();
+
+		//5. 绘制镜子外的物体
+		GameObjectResource::SetRenderDefault(bShowMesh);
+		material.ambient = XMFLOAT4(0.4f, 0.4f, 0.4f, 1.0f);
+		material.diffuse = XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f);
+		material.specular = XMFLOAT4(0.1f, 0.1f, 0.1f, 16.0f);
+		m_box->setMaterial(material);
+		m_box->draw();
+		for (auto& wall : m_around)
+			wall->draw();
+		m_ground->draw();
+
+		//6、绘制镜子外物体阴影
+		GameObjectResource::setIsReflectionAndIsShadow(false, true);
+		GameObjectResource::SetRenderNoDoubleBlend(0, bShowMesh);
+		material.ambient = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
+		material.diffuse = XMFLOAT4(0.0f, 0.0f, 0.0f, 0.5f);
+		material.specular = XMFLOAT4(0.0f, 0.0f, 0.0f, 16.0f);
+		m_box->setMaterial(material);
+		m_box->draw();
+
+		//还原
+		GameObjectResource::setIsReflectionAndIsShadow(false, false);
+		material.ambient = XMFLOAT4(0.4f, 0.4f, 0.4f, 1.0f);
+		material.diffuse = XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f);
+		material.specular = XMFLOAT4(0.1f, 0.1f, 0.1f, 16.0f);
+		m_box->setMaterial(material);
+
+	}
+		break;
+	default:
+		break;
+	}
+}
